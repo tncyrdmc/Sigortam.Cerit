@@ -10,10 +10,12 @@
     <meta charset="UTF-8">
     <title>CodePen - Products Dashboard UI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="~/css/style.css">
     <link rel="stylesheet" href="~/css/grid.css">
     <link rel="stylesheet" href="~/css/modal.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/calender.css">
 </head>
 <body>
     <!-- partial:index.partial.html -->
@@ -38,48 +40,77 @@
                                     <span aria-hidden="true" class="ion-ios-close"></span>
                                 </button>
                             </div>
-                            <div class="modal-body p-4 p-md-5">
+                            <form id="form" class="modal-body p-4 p-md-5 needs-validation" novalidate>
                                 <div class="icon d-flex align-items-center justify-content-center">
                                     <span class="ion-ios-person"></span>
                                 </div>
                                 <h3 class="text-center mb-4 signIn">Kayıt Edin</h3>
-                                    <div class="form-group row">
-                                        <div class="col">
-                                            <input type="text" id="name" class="form-control rounded-left" placeholder="İsim">
-                                        </div>
-                                        <div class="col">
-                                            <input type="text" id="lastName" class="form-control rounded-right" placeholder="Soyisim">
-                                        </div>
-                                    </div>
-                                    <div class="form-group d-flex row">
-                                        <div class="col">
-                                            <input type="text" id="identificationNumber" class="form-control rounded-left" placeholder="TC">
-                                        </div>
-                                        <div class="col">
-                                            <input type="text" id="birthDate" class="form-control rounded-right" placeholder="Doğum Yılı">
+                                <div class="form-group row">
+                                    <div class="col">
+                                        <input type="text" id="name" class="form-control rounded-left needs-validation-text" placeholder="İsim" required />
+                                        <div class="invalid-feedback">
+                                            Lütfen isim kısmını doldurun.
                                         </div>
                                     </div>
-                                    <div class="form-group d-flex row">
-                                        <div class="col">
-                                            <input type="text" id="plateNumber" class="form-control rounded-left" placeholder="Plaka Numarası">
+                                    <div class="col">
+                                        <input type="text" id="lastName" class="form-control rounded-right needs-validation-text" placeholder="Soyisim" required />
+                                        <div class="invalid-feedback">
+                                            Lütfen soyisim kısmını doldurun.
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <a  class="form-control btn btn-primary rounded submit px-3"  onclick='identityCheck()'>Kayıt Et</a>
-                                    </div>
-                                    <div class="form-group d-md-flex">
-                                        <div class="form-check w-50">
-                                            <label class="custom-control fill-checkbox">
-                                                <input type="checkbox" class="fill-control-input">
-                                                <span class="fill-control-indicator"></span>
-                                                <span class="fill-control-description">Remember Me</span>
-                                            </label>
-                                        </div>
-                                        <div class="w-50 text-md-right">
-                                            <a href="#">Forgot Password</a>
+                                </div>
+                                <div class="form-group d-flex row">
+                                    <div class="col">
+                                        <input type="text" id="identificationNumber" class="form-control rounded-left needs-validation-text" placeholder="TC" required />
+                                        <div class="invalid-feedback">
+                                            Lütfen TC kısmını doldurun.
                                         </div>
                                     </div>
-                            </div>
+                                    <div class="col">
+                                        <input type="text" id="birthDate" class="form-control rounded-right needs-validation-text" placeholder="Doğum Yılı" required />
+                                        <div class="invalid-feedback">
+                                            Lütfen doğum yılı kısmını doldurun.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group d-flex row">
+                                    <div class="col">
+                                        <input type="text" id="plateNumber" class="form-control rounded-right needs-validation-text" placeholder="Plaka Numarası" required />
+                                        <div class="invalid-feedback">
+                                            Lütfen plaka numarası kısmını doldurun.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group d-flex row">
+                                    <div class="col">
+                                        <input type="text" id="insuranceStartDate" class="datepicker form-control rounded-left"  placeholder="Sigorta Başlangıç Tarihi"  />
+                                        <div class="invalid-feedback">
+                                            Lütfen sigorta başlangıç tarihi kısmını doldurun.
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" id="insuranceEndDate"  class="datepicker form-control rounded-right"  placeholder="Sigorta Bitiş Tarihi"  />
+                                        <div class="invalid-feedback">
+                                            Lütfen sigorta bitiş tarihi kısmını doldurun.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button type="submit" class="btn btn-primary container" onclick="identityCheck()">Kayıt Et</button>
+                                </div>
+                                @*                                <div class="form-group d-md-flex">
+                                    <div class="form-check w-50">
+                                    <label class="custom-control fill-checkbox">
+                                    <input type="checkbox" class="fill-control-input">
+                                    <span class="fill-control-indicator"></span>
+                                    <span class="fill-control-description">Remember Me</span>
+                                    </label>
+                                    </div>
+                                    <div class="w-50 text-md-right">
+                                    <a href="#">Forgot Password</a>
+                                    </div>
+                                    </div>*@
+                            </form>
                             @*                                <div class="modal-footer justify-content-center">
                                 <p>Not a member? <a href="#">Create an account</a></p>
                                 </div>*@
@@ -384,15 +415,54 @@
         </div>
     </div>
     <!-- partial -->
+    <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/js/gird.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/popper.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js'></script>
-    <script src="js/jquery.min.js"></script>
-    <script src="js/popper.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/mersis.js"></script>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/popper.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/main.js"></script>
+    <script src="~/js/mersis.js"></script>
+    <script src="~/js/choices.js"></script>
+    <script src="~/js/flatpickr.js"></script>
+    <script src="~/js/formValidate.js"></script>
+    <script>
+        flatpickr(".datepicker",
+        {});
+
+    </script>
+    <script>
+            const choices = new Choices('[data-trigger]',
+            {
+                searchEnabled: false,
+                itemSelectText: '',
+            });
+
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function () {
+          'use strict'
+
+          // Fetch all the forms we want to apply custom Bootstrap validation styles to
+          debugger;
+          var forms = document.querySelectorAll('.needs-validation');
+          //var forms2 = document.querySelectorAll('.needs-validation')[0].filter(x => x.id === 'insuranceStartDate');
+          //var forms3 = document.querySelectorAll('.needs-validation').filter(function (i,n){ return n.id==='insuranceStartDate';});
+          // Loop over them and prevent submission
+          Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+              form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                  event.preventDefault()
+                  event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+              }, false)
+            })
+        })()
+    </script>
 </body>
 </html>
 

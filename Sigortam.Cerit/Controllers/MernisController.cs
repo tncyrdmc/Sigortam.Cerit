@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Sigortam.Cerit.Models;
 
 namespace Sigortam.Cerit.Controllers
 {
@@ -8,20 +9,29 @@ namespace Sigortam.Cerit.Controllers
         {
             return View();
         }
-        public async void IdentityCheck()
+        [HttpPost]
+        public async Task<JsonResult> IdentityCheck (UserIdentityCheckDto userIdentityCheckDto)
         {
+            if(userIdentityCheckDto == null)
+                return Json(new { Message = "Beklenmeyen bir hata oluştu lütfen tekrar deneyin", Code = ResultType.Failed });
+
             var client = new MernisService.KPSPublicSoapClient(MernisService.KPSPublicSoapClient.EndpointConfiguration.KPSPublicSoap);
             try
             {
-                var response = await client.TCKimlikNoDogrulaAsync(Convert.ToInt64(13991590581), "MUSTAFA", "ÖZCERİT", 1997);
-                var result = response.Body.TCKimlikNoDogrulaResult;
+                var response = await client.TCKimlikNoDogrulaAsync(Convert.ToInt64(userIdentityCheckDto.IdentificationNumber), userIdentityCheckDto.Name, userIdentityCheckDto.LastName, userIdentityCheckDto.BirthDate);
+                if (response.Body.TCKimlikNoDogrulaResult)
+                {
+                    return Json(new { Message = "Başarılı bir şekilde kayıt oluşturuldu", Code = ResultType.Succeeded });
+                }
+                else
+                {
+                    return Json(new { Message = "Bilgileri kontrol edip tekrar deneyin", Code = ResultType.Failed });
+                }
             }
-            catch (Exception ex)
+            catch 
             {
-                Exception.Equals(ex.Message, "İnternet bağlantınızı kontrol edin");
+                return Json(new { Message = "İnternet bağlantınızı kontrol edin", Code = ResultType.ConnectionFailed });
             }
-            var aaa = 5;
-            //return result;
         }
     }
 }
