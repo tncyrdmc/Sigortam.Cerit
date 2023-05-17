@@ -83,13 +83,13 @@
                                 </div>
                                 <div class="form-group d-flex row">
                                     <div class="col">
-                                        <input type="text" id="insuranceStartDate" class="datepicker form-control rounded-left"  placeholder="Sigorta Başlangıç Tarihi"  />
+                                        <input type="text" id="insuranceStartDate" class="datepicker form-control rounded-left" placeholder="Sigorta Başlangıç Tarihi" />
                                         <div class="invalid-feedback">
                                             Lütfen sigorta başlangıç tarihi kısmını doldurun.
                                         </div>
                                     </div>
                                     <div class="col">
-                                        <input type="text" id="insuranceEndDate"  class="datepicker form-control rounded-right"  placeholder="Sigorta Bitiş Tarihi"  />
+                                        <input type="text" id="insuranceEndDate" class="datepicker form-control rounded-right" placeholder="Sigorta Bitiş Tarihi" />
                                         <div class="invalid-feedback">
                                             Lütfen sigorta bitiş tarihi kısmını doldurun.
                                         </div>
@@ -446,11 +446,11 @@
 
           // Fetch all the forms we want to apply custom Bootstrap validation styles to
           debugger;
-          var forms = document.querySelectorAll('.needs-validation');
-          //var forms2 = document.querySelectorAll('.needs-validation')[0].filter(x => x.id === 'insuranceStartDate');
-          //var forms3 = document.querySelectorAll('.needs-validation').filter(function (i,n){ return n.id==='insuranceStartDate';});
+         var forms = document.querySelectorAll('.needs-validation')
+         //var forms = Array.from(document.querySelectorAll('.needs-validation')[0]).filter(x=> !x.classList.contains("datepicker") && x.id !== '' );
+
           // Loop over them and prevent submission
-          Array.prototype.slice.call(forms)
+            Array.prototype.slice.call(forms)
             .forEach(function (form) {
               form.addEventListener('submit', function (event) {
                 if (!form.checkValidity()) {
