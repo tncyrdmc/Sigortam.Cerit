@@ -13,10 +13,8 @@ namespace Sigortam.Cerit.Data.Entity
         public int InsuranceId { get; set; }
         public DateTime InsuranceStartDate { get; set; }
         public DateTime InsuranceEndDate { get; set; }
-        public double IdentificationNumber { get; set; }
+        public double IdentificationNumber { get; set; } 
         public double Price { get; set; }
-        public bool IsActive { get { return InsuranceEndDate >= DateTime.Now ? true : false; }}
-        public double MyProperty { get {return (DateTime.Now - InsuranceEndDate).TotalDays ;}}
         public User User { get; set; }
         public Vehicle Vehicle { get; set; }
     }

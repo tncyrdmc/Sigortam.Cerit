@@ -1,8 +1,8 @@
-﻿#Migration Package Manager Console'a Sigortam.Cerit.Data seçilerek atılmalıdır.
-
+﻿
 
 #Add-Migration <name>
 #Add-Migration InitialMihration -c ApplicationDbContext
+
 
 
 #Update-Database

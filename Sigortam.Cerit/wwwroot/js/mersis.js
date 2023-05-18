@@ -14,9 +14,13 @@
     //var forms2 = document.querySelectorAll('.needs-validation').filter(x => x.id != "insuranceStartDate" || x.id != "insuranceEndDate")
     debugger;
     if (validate === 0) {
+        var user = {
+            Name: document.getElementById("name").value, LastName: document.getElementById("lastName").value, IdentificationNumber: document.getElementById("identificationNumber").value,
+            BirthYear: document.getElementById("birthDate").value
+        }
+
         var userIdentityCheckDto = {
-            Name: document.getElementById("name").value, LastName: document.getElementById("lastName").value, IdentificationNumber: document.getElementById("identificationNumber").value, BirthDate: document.getElementById("birthDate").value,
-            InsuranceStartDate: document.getElementById("insuranceStartDate").value, InsuranceEndDate: document.getElementById("insuranceEndDate").value, PlateNumber: document.getElementById("plateNumber").value
+            InsuranceStartDate: document.getElementById("insuranceStartDate").value, InsuranceEndDate: document.getElementById("insuranceEndDate").value, PlateNumber: document.getElementById("plateNumber").value, User: user
         };
 
         $.ajax({
@@ -29,7 +33,7 @@
                 debugger;
                 if (result.code == 101) {
                     alert(result.message);
-                    location.href = "/Home/Index";
+                    location.href = "/Insurance/Insurance";
                 }
                 else {
                     alert(result.message)

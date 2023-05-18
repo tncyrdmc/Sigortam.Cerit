@@ -12,7 +12,7 @@ using Sigortam.Cerit.Data;
 namespace Sigortam.Cerit.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230517101233_InitialMihration")]
+    [Migration("20230518115609_InitialMihration")]
     partial class InitialMihration
     {
         /// <inheritdoc />
