@@ -7,9 +7,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Sigortam.Cerit.Common\Sigortam.Cerit.Common.csproj" />
-    <ProjectReference Include="..\Sigortam.Cerit.Data\Sigortam.Cerit.Data.csproj" />
-  </ItemGroup>
-
 </Project>

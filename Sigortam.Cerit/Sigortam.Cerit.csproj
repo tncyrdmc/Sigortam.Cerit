@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\Entity\**" />
+    <Content Remove="Models\Entity\**" />
+    <EmbeddedResource Remove="Models\Entity\**" />
+    <None Remove="Models\Entity\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="compilerconfig.json" />
   </ItemGroup>
 
@@ -38,11 +45,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Sigortam.Cerit.Core\Sigortam.Cerit.Core.csproj" />
     <ProjectReference Include="..\Sigortam.Cerit.Data\Sigortam.Cerit.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\Entity\" />
   </ItemGroup>
 
 </Project>

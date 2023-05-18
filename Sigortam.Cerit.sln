@@ -5,11 +5,13 @@ VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigortam.Cerit", "Sigortam.Cerit\Sigortam.Cerit.csproj", "{2BABEFF4-9763-49C8-84CA-4A7E3EEF0706}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sigortam.Cerit.Domain", "Sigortam.Cerit.Domain\Sigortam.Cerit.Domain.csproj", "{1E40E27F-49FD-4F6B-854E-54B5858A73BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigortam.Cerit.Domain", "Sigortam.Cerit.Domain\Sigortam.Cerit.Domain.csproj", "{1E40E27F-49FD-4F6B-854E-54B5858A73BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sigortam.Cerit.Core", "Sigortam.Cerit.Core\Sigortam.Cerit.Core.csproj", "{7A3FF1B4-DA9F-45D5-A126-66B8FF244771}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigortam.Cerit.Core", "Sigortam.Cerit.Core\Sigortam.Cerit.Core.csproj", "{7A3FF1B4-DA9F-45D5-A126-66B8FF244771}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sigortam.Cerit.Data", "Sigortam.Cerit.Data\Sigortam.Cerit.Data.csproj", "{6E004995-8236-4367-8B04-2991CCD5600C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sigortam.Cerit.Data", "Sigortam.Cerit.Data\Sigortam.Cerit.Data.csproj", "{6E004995-8236-4367-8B04-2991CCD5600C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sigortam.Cerit.Common", "Sigortam.Cerit.Common\Sigortam.Cerit.Common.csproj", "{7F1AB011-4F95-403D-91DC-6FCB9FB381C4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{6E004995-8236-4367-8B04-2991CCD5600C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E004995-8236-4367-8B04-2991CCD5600C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E004995-8236-4367-8B04-2991CCD5600C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F1AB011-4F95-403D-91DC-6FCB9FB381C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F1AB011-4F95-403D-91DC-6FCB9FB381C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F1AB011-4F95-403D-91DC-6FCB9FB381C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F1AB011-4F95-403D-91DC-6FCB9FB381C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

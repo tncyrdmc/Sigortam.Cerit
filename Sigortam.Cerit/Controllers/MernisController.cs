@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Sigortam.Cerit.Common.Dtos;
 using Sigortam.Cerit.Models;
 
 namespace Sigortam.Cerit.Controllers
@@ -10,7 +11,7 @@ namespace Sigortam.Cerit.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<JsonResult> IdentityCheck (UserIdentityCheckDto userIdentityCheckDto)
+        public async Task<JsonResult> IdentityCheck (InsuranceDto userIdentityCheckDto)
         {
             if(userIdentityCheckDto == null)
                 return Json(new { Message = "Beklenmeyen bir hata oluştu lütfen tekrar deneyin", Code = ResultType.Failed });
@@ -18,9 +19,11 @@ namespace Sigortam.Cerit.Controllers
             var client = new MernisService.KPSPublicSoapClient(MernisService.KPSPublicSoapClient.EndpointConfiguration.KPSPublicSoap);
             try
             {
-                var response = await client.TCKimlikNoDogrulaAsync(Convert.ToInt64(userIdentityCheckDto.IdentificationNumber), userIdentityCheckDto.Name, userIdentityCheckDto.LastName, userIdentityCheckDto.BirthDate);
+                var response = await client.TCKimlikNoDogrulaAsync(Convert.ToInt64(userIdentityCheckDto.User.IdentificationNumber), userIdentityCheckDto.User.Name, userIdentityCheckDto.User.LastName, userIdentityCheckDto.User.BirthYear);
                 if (response.Body.TCKimlikNoDogrulaResult)
                 {
+                    var services = new Sigortam.Cerit.Core.Services.Insurance.InsuranceService();
+                    services.AddOrUpdateInsurance(userIdentityCheckDto);
                     return Json(new { Message = "Başarılı bir şekilde kayıt oluşturuldu", Code = ResultType.Succeeded });
                 }
                 else
