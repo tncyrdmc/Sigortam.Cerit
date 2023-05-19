@@ -11,8 +11,8 @@ namespace Sigortam.Cerit.Models
         }
         public IActionResult Insurance(InsuranceDto insurance)
         {
-            var services = new Sigortam.Cerit.Core.Services.Insurance.InsuranceService();
-            services.AddOrUpdateInsurance(insurance);
+            //var services = new Sigortam.Cerit.Core.Services.Insurance.InsuranceService();
+            //services.AddOrUpdateInsurance(insurance);
             return View();
         }
     }

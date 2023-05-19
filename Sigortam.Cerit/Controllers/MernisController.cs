@@ -1,11 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Sigortam.Cerit.Common.Dtos;
+using Sigortam.Cerit.Core.Interfaces;
+using Sigortam.Cerit.Core.Services.Insurance;
 using Sigortam.Cerit.Models;
 
 namespace Sigortam.Cerit.Controllers
 {
     public class MernisController : Controller
     {
+        public IInsurance _servis;
+
+        public MernisController(IInsurance servis)
+        {
+            _servis = servis;
+        }
         public IActionResult Index()
         {
             return View();
@@ -22,8 +30,7 @@ namespace Sigortam.Cerit.Controllers
                 var response = await client.TCKimlikNoDogrulaAsync(Convert.ToInt64(userIdentityCheckDto.User.IdentificationNumber), userIdentityCheckDto.User.Name, userIdentityCheckDto.User.LastName, userIdentityCheckDto.User.BirthYear);
                 if (response.Body.TCKimlikNoDogrulaResult)
                 {
-                    var services = new Sigortam.Cerit.Core.Services.Insurance.InsuranceService();
-                    services.AddOrUpdateInsurance(userIdentityCheckDto);
+                    _servis.AddOrUpdateInsurance(userIdentityCheckDto);
                     return Json(new { Message = "Başarılı bir şekilde kayıt oluşturuldu", Code = ResultType.Succeeded });
                 }
                 else

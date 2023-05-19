@@ -1,4 +1,5 @@
 ﻿using Sigortam.Cerit.Common.Dtos;
+using Sigortam.Cerit.Core.Interfaces;
 using Sigortam.Cerit.Data;
 using Sigortam.Cerit.Data.Entity;
 using System;
@@ -10,10 +11,13 @@ using System.Threading.Tasks;
 
 namespace Sigortam.Cerit.Core.Services.Insurance
 {
-    public partial class InsuranceService
+    public partial class InsuranceService:IInsurance
     {
-        private readonly ApplicationDbContext _context;
-
+        public ApplicationDbContext _context;
+        public InsuranceService(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         //[HandleTransaction]
         public void AddOrUpdateInsurance(InsuranceDto insuranceDto)
         {
@@ -39,21 +43,21 @@ namespace Sigortam.Cerit.Core.Services.Insurance
                 _context.User.Add(user);
             }
 
-            if (insuranceDto.Vehicle.VehicleId != default)
-            {
-                vehicle = _context.Vehicle.FirstOrDefault(x => x.VehicleId == insuranceDto.Vehicle.VehicleId);
-            }
-            else
-            {
-                vehicle = new Vehicle
-                {
-                    Brand = insuranceDto.Vehicle.Brand,
-                    Model = insuranceDto.Vehicle.Model,
-                    PlateNumber = insuranceDto.Vehicle.PlateNumber,
-                    VehicleYear = insuranceDto.Vehicle.VehicleYear,
-                };
-                _context.Vehicle.Add(vehicle);
-            }
+            //if (insuranceDto.Vehicle.VehicleId != default)
+            //{
+            //    vehicle = _context.Vehicle.FirstOrDefault(x => x.VehicleId == insuranceDto.Vehicle.VehicleId);
+            //}
+            //else
+            //{
+            //    vehicle = new Vehicle
+            //    {
+            //        Brand = insuranceDto.Vehicle.Brand,
+            //        Model = insuranceDto.Vehicle.Model,
+            //        PlateNumber = insuranceDto.Vehicle.PlateNumber,
+            //        VehicleYear = insuranceDto.Vehicle.VehicleYear,
+            //    };
+            //    _context.Vehicle.Add(vehicle);
+            //}
 
             var insurance = new Sigortam.Cerit.Data.Entity.Insurance
             {
@@ -62,10 +66,11 @@ namespace Sigortam.Cerit.Core.Services.Insurance
                 InsuranceStartDate = insuranceDto.InsuranceStartDate,
                 Price = insuranceDto.Price,
                 User = user,
-                Vehicle = vehicle,
+                //Vehicle = vehicle,
             };
 
             _context.Insurance.Add(insurance);
+            _context.SaveChanges();
 
         }
     }
