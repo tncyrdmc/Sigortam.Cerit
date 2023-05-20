@@ -14,5 +14,6 @@ namespace Sigortam.Cerit.Data.Entity
         public string Name { get; set; }
         public Base64FormattingOptions Photo { get; set; }
         public bool IsActive { get; set; }
+        public ICollection<Insurance>? Insurances { get; set; }
     }
 }

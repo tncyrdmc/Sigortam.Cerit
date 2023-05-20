@@ -10,5 +10,6 @@ namespace Sigortam.Cerit.Core.Interfaces
     public interface IInsurance
     {
          void AddOrUpdateInsurance(InsuranceDto insuranceDto);
+         List<InsuranceDto> GetInsurances();
     }
 }

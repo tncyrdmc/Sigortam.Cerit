@@ -18,5 +18,6 @@ namespace Sigortam.Cerit.Data.Entity
         public double IdentificationNumber { get; set; }
         public bool IsActive { get; set; }
         public bool IsDelete { get; set; }
+        public ICollection<Insurance>? Insurances { get; set; }
     }
 }

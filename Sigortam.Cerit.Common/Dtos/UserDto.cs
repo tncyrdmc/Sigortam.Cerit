@@ -11,10 +11,12 @@ namespace Sigortam.Cerit.Common.Dtos
         public int UserId { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }
+        public string FullName { get { return Name + " " + LastName ; } }
         public int BirthYear { get; set; }
         public double PhoneNumber { get; set; }
         public double IdentificationNumber { get; set; }
         public bool IsActive { get; set; }
         public bool IsDelete { get; set; }
+        public List<InsuranceDto>? Insurances { get; set; }
     }
 }

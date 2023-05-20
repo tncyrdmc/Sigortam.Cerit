@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sigortam.Cerit.Data;
 
@@ -11,9 +12,11 @@ using Sigortam.Cerit.Data;
 namespace Sigortam.Cerit.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230519221435_FixedRelationship")]
+    partial class FixedRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +33,10 @@ namespace Sigortam.Cerit.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InsuranceId"));
 
-                    b.Property<int?>("InsuranceCompanyId")
+                    b.Property<double>("IdentificationNumber")
+                        .HasColumnType("float");
+
+                    b.Property<int>("InsuranceCompanyId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("InsuranceEndDate")
@@ -42,10 +48,10 @@ namespace Sigortam.Cerit.Data.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("VehicleId")
+                    b.Property<int>("VehicleId")
                         .HasColumnType("int");
 
                     b.HasKey("InsuranceId");
@@ -150,15 +156,21 @@ namespace Sigortam.Cerit.Data.Migrations
                 {
                     b.HasOne("Sigortam.Cerit.Data.Entity.InsuranceCompany", "InsuranceCompany")
                         .WithMany("Insurances")
-                        .HasForeignKey("InsuranceCompanyId");
+                        .HasForeignKey("InsuranceCompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Sigortam.Cerit.Data.Entity.User", "User")
                         .WithMany("Insurances")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Sigortam.Cerit.Data.Entity.Vehicle", "Vehicle")
                         .WithMany()
-                        .HasForeignKey("VehicleId");
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("InsuranceCompany");
 

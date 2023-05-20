@@ -61,7 +61,6 @@ namespace Sigortam.Cerit.Core.Services.Insurance
 
             var insurance = new Sigortam.Cerit.Data.Entity.Insurance
             {
-                IdentificationNumber = insuranceDto.IdentificationNumber,
                 InsuranceEndDate = insuranceDto.InsuranceEndDate,
                 InsuranceStartDate = insuranceDto.InsuranceStartDate,
                 Price = insuranceDto.Price,
@@ -72,6 +71,34 @@ namespace Sigortam.Cerit.Core.Services.Insurance
             _context.Insurance.Add(insurance);
             _context.SaveChanges();
 
+        }
+        public List<InsuranceDto> GetInsurances()
+        {
+            return _context.Insurance.Select(x=> new InsuranceDto
+            { 
+            InsuranceEndDate = x.InsuranceEndDate,    
+            InsuranceId = x.InsuranceId,    
+            InsuranceStartDate = x.InsuranceStartDate,
+            Price = x.Price,
+            User = x.User != null  ? new UserDto 
+            {
+                Name = x.User.Name,
+                LastName =x.User.LastName,
+                BirthYear = x.User.BirthYear,
+                IdentificationNumber =x.User.IdentificationNumber,
+                PhoneNumber = x.User.PhoneNumber,
+                UserId = x.User.UserId,
+            } : default,
+            Vehicle = x.Vehicle != null ? new VehicleDto 
+            { 
+                 Brand = x.Vehicle.Brand,
+                 Model = x.Vehicle.Model,
+                 PlateNumber = x.Vehicle.PlateNumber,
+                 VehicleId = x.Vehicle.VehicleId,
+                 VehicleYear = x.Vehicle.VehicleYear,
+            }: default,
+            })
+             .ToList();
         }
     }
 }
