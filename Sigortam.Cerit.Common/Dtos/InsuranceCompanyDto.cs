@@ -12,5 +12,8 @@ namespace Sigortam.Cerit.Common.Dtos
         public string Name { get; set; }
         public Base64FormattingOptions Photo { get; set; }
         public bool IsActive { get; set; }
+        public string ImageSvgUrl { get; set; }
+        public ICollection<InsuranceDto>? Insurances { get; set; }
+
     }
 }

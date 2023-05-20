@@ -43,5 +43,6 @@ namespace Sigortam.Cerit.Controllers
                 return Json(new { Message = "İnternet bağlantınızı kontrol edin", Code = ResultType.ConnectionFailed });
             }
         }
+
     }
 }

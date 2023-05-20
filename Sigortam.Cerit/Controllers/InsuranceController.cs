@@ -15,7 +15,7 @@ namespace Sigortam.Cerit.Controllers
         }
         public IActionResult Index()
         {
-           var insurances =  _servis.GetInsurances();
+           var insurances =  _servis.GetInsurances().OrderBy(x=> x.IsActive).ToList();
             return View(insurances);
         }
         public IActionResult Insurance(InsuranceDto insurance)
@@ -58,6 +58,73 @@ namespace Sigortam.Cerit.Controllers
                     return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Sigortalarım_"+DateTime.Now.ToString("dd/M/yyyy", CultureInfo.InvariantCulture)+".xlsx");
                 }
             }
+        }
+        [HttpPost]
+        public JsonResult FilterSorting(FilterDto filterData)
+        {
+            //Servisten çekmek yerine dataları sayfadan güncel halini almak gerekiyor search için sıkıntılı durumlar yaşanmasın.
+            var insurances = _servis.GetInsurances();
+            if(filterData.FilterSort == "userFullName")
+            {
+                var insurancesfilter = insurances.OrderByDescending(x => x.User.FullName);
+                return Json("userFullName");
+            }
+            else if (filterData.FilterSort == "userFullNameDesc")
+            {
+                var insurancesfilter = insurances.OrderBy(x => x.User.FullName);
+                return Json("userFullNameDesc");
+            }
+            else if (filterData.FilterSort == "startDate")
+            {
+                var insurancesfilter = insurances.OrderByDescending(x => x.InsuranceStartDate);
+                return Json("startDate");
+            }
+            else if (filterData.FilterSort == "startDateDesc")
+            {
+                var insurancesfilter = insurances.OrderBy(x => x.InsuranceStartDate);
+                return Json("startDateDesc");
+            }
+            else if (filterData.FilterSort == "endDate")
+            {
+                var insurancesfilter = insurances.OrderByDescending(x => x.InsuranceEndDate);
+                return Json("endDate");
+            }
+            else if (filterData.FilterSort == "endDateDesc")
+            {
+                var insurancesfilter = insurances.OrderBy(x => x.InsuranceEndDate);
+                return Json("endDateDesc");
+            }
+            else if (filterData.FilterSort == "price")
+            {
+                var insurancesfilter = insurances.OrderByDescending(x => x.Price);
+                return Json("price");
+            }
+            else if (filterData.FilterSort == "priceDesc")
+            {
+                var insurancesfilter = insurances.OrderBy(x => x.Price);
+                return Json("priceDesc");
+            }
+            else if (filterData.FilterSort == "remainingTime")
+            {
+                var insurancesfilter = insurances.OrderByDescending(x => x.RemainingTime);
+                return Json("remainingTime");
+            }
+            else if (filterData.FilterSort == "remainingTimeDesc")
+            {
+                var insurancesfilter = insurances.OrderBy(x => x.RemainingTime);
+                return Json("remainingTimeDesc");
+            }
+            else if (filterData.FilterSort == "isActive")
+            {
+                var insurancesfilter = insurances.OrderByDescending(x => x.IsActive);
+                return Json("isActive");
+            }
+            else if (filterData.FilterSort == "isActiveDesc")
+            {
+                var insurancesfilter = insurances.OrderBy(x => x.IsActive);
+                return Json("isActiveDesc");
+            }
+            return Json(true);
         }
     }
 }

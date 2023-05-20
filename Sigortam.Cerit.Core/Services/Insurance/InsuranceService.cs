@@ -100,5 +100,16 @@ namespace Sigortam.Cerit.Core.Services.Insurance
             })
              .ToList();
         }
+        public List<InsuranceCompanyDto> GetInsuranceCompanys()
+        {
+            return _context.InsuranceCompany.Select(x => new InsuranceCompanyDto
+            {
+                IsActive = x.IsActive,
+                InsuranceCompanyId = x.InsuranceCompanyId,
+                Name = x.Name,
+                Photo = x.Photo
+            }).ToList();
+                
+        }
     }
 }
