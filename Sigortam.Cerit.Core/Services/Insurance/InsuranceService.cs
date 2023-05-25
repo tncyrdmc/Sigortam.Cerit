@@ -97,6 +97,14 @@ namespace Sigortam.Cerit.Core.Services.Insurance
                  VehicleId = x.Vehicle.VehicleId,
                  VehicleYear = x.Vehicle.VehicleYear,
             }: default,
+            InsuranceCompany = x.InsuranceCompany != null ? new InsuranceCompanyDto
+            {
+                IsActive = x.InsuranceCompany.IsActive,
+                ImageSvgUrl = x.InsuranceCompany.ImageSvgUrl,
+                InsuranceCompanyId = x.InsuranceCompany.InsuranceCompanyId,
+                Name = x.InsuranceCompany.Name,
+                Photo  = default,
+            }: default
             })
              .ToList();
         }

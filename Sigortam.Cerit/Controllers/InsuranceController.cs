@@ -42,7 +42,7 @@ namespace Sigortam.Cerit.Controllers
 
                 foreach (var insurance in insurances)
                 {
-                    workSheet.Cell(insurancesCount, 1).Value = insurancesCount;
+                    workSheet.Cell(insurancesCount, 1).Value = insurance.InsuranceCompany.Name;
                     workSheet.Cell(insurancesCount, 2).Value = insurance?.User.FullName ?? string.Empty;
                     workSheet.Cell(insurancesCount, 3).Value = insurance.InsuranceStartDate.ToString("dd/M/yyyy", CultureInfo.InvariantCulture);
                     workSheet.Cell(insurancesCount, 4).Value = insurance.InsuranceEndDate.ToString("dd/M/yyyy", CultureInfo.InvariantCulture);

@@ -16,5 +16,6 @@ namespace Sigortam.Cerit.Common.Dtos
         public double RemainingTime { get { return Math.Round((InsuranceEndDate - DateTime.Now ).TotalDays) < 1.0 ? 0.00 : Math.Round((InsuranceEndDate - DateTime.Now).TotalDays); } }
         public UserDto? User { get; set; }
         public VehicleDto? Vehicle { get; set; }
+        public InsuranceCompanyDto? InsuranceCompany { get; set; }
     }
 }

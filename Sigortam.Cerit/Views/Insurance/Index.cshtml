@@ -211,14 +211,13 @@
                             <span>&nbsp;</span>
                             <span>&nbsp;</span>
                             <span>&nbsp;</span>
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e2/AXA_Logo_FR.svg" alt="product">
-                            @*<img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Allianz.svg" alt="product">*@
-                            <span>Axa Sigorta</span>
+                            <img src="@insurance.InsuranceCompany.ImageSvgUrl" alt="product">
+                            <span>@insurance.InsuranceCompany.Name</span>
                         </div>
                         <div class="product-cell category"><span class="cell-label">Kullanıcı:</span>@insurance.User.FullName</div>
                         <div class="product-cell category"><span class="cell-label">Başlangıç Tarihi:</span>@insurance.InsuranceStartDate.ToString("dd/M/yyyy", CultureInfo.InvariantCulture)</div>
                         <div class="product-cell category"><span class="cell-label">Bitiş Tarihi:</span>@insurance.InsuranceEndDate.ToString("dd/M/yyyy", CultureInfo.InvariantCulture)</div>
-                        <div class="product-cell price"><span class="cell-label">Ücret:</span>710 ₺</div>
+                        <div class="product-cell price"><span class="cell-label">Ücret:</span>@insurance.Price ₺</div>
                         <div class="product-cell stock"><span class="cell-label">Durum:</span>@insurance.RemainingTime</div>
 
                         <div class="product-cell status-cell">
