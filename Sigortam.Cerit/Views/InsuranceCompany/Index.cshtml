@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Sigorta Şirketleri";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var count = 1;
 }
 
 <h1 class="app-content-headerText ">&nbsp;&nbsp;Sigorta Şirketleri</h1>
@@ -10,20 +11,94 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CodePen - Products Dashboard UI</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-    <link rel="stylesheet" href="~/css/style.css">
-    <link rel="stylesheet" href="~/css/grid.css">
-    <link rel="stylesheet" href="~/css/modal.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="~/css/calender.css">
+    <link rel="stylesheet" href="~/css/togglebutton.css">
 </head>
 <body>
-    @foreach (var item in Model)
-    {
-        
-    }
+    <div class="app-container backGround">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr style="color:gray">
+                    <th scope="col">#</th>
+                    <th scope="col">Resim</th>
+                    <th scope="col">Sigorta şirketi</th>
+                    <th scope="col">Durum</th>
+                </tr>
+            </thead>
+            @foreach (var insuranceCompany in Model)
+            {
+                <tbody>
+                    <tr style="color:white">
+                        <th scope="row">@count</th>
+                        <td> <img src="@insuranceCompany.ImageSvgUrl" width="70" height="50" alt="product"></td>
+                        <td>@insuranceCompany.Name</td>
+                        @*<td id="toggleButton+@count" class="toggleBody"><input type="checkbox"></td>*@
+                        @*                        @if (insuranceCompany.IsActive)
+                            {
+                            <td><span class="status active">Active</span></td>
+                            }
+                            else
+                            {
+                            <td><span class="status disabled">Disabled</span></td>
+                            }*@
+                        @if (insuranceCompany.IsActive)
+                        {
+                            var toogleButtonId = "toogleButton" + @insuranceCompany.InsuranceCompanyId;
+                            <td ><input id="@toogleButtonId"  class="toggleBody" type="checkbox" checked allahinCezaJs="checked"  @*value="checked"*@ @*onclick="changeCheck('toogleButton'+'@insuranceCompany.InsuranceCompanyId')"*@></td>
+                        }
+                        else
+                        {
+                            var toogleButtonId = "toogleButton" + @insuranceCompany.InsuranceCompanyId;
+                            <td ><input id="@toogleButtonId" class="toggleBody"  type="checkbox" allahinCezaJs="UnChecked"  @*value="UnChecked"*@ @*onclick="changeCheck('toogleButton'+'@insuranceCompany.InsuranceCompanyId')"*@></td>
+                        }
+                    </tr>
+                    <tr>
+                </tbody>
+                count++;
+            }
+        </table>
+    </div>
+    <div style="text-align:right">
+        <button class="app-content-headerButton" onclick="saveFunction()">Kaydet</button>
+    </div>
 </body>
+<script>
+            function saveFunction(){
+                  var forms = document.querySelectorAll('.toggleBody');
+                  var toogleList = [];
+                        for(let i = 0 ; i < forms.length ; i++){
+                            var toogleButtonId = forms[i].id;
+                            var insuranceCompanyId = parseInt(toogleButtonId.replace("toogleButton",""));
+                        if(document.getElementById(toogleButtonId).checked == true){
+                           toogleList[i] = { InsuranceCompanyId:insuranceCompanyId , IsActive:true };
+                        }
+                        else{
+                            toogleList[i] = { InsuranceCompanyId:insuranceCompanyId , IsActive:false };
+                        }
+                       }
+                          $.ajax({
+                            contentType: 'application/json; charset=utf-8',
+                            dataType: 'json',
+                            type: "POST",
+                            url: "/InsuranceCompany/UpdateInsuranceCompany/",
+                            data: JSON.stringify(toogleList),
+                            success: function (result) {
+                                    alert("İşlem Başarılı");
+                                    location.href = "/InsuranceCompany/Index";
+                            }
+                        });
+            }
+
+            function changeCheck(toogleButtonId){
+                if(document.getElementById(toogleButtonId).checked == true){
+                    document.getElementById(toogleButtonId).checked = false;
+                    @*document.getElementById(toogleButtonId).value = "unChecked";*@
+                }
+                else{
+                    document.getElementById(toogleButtonId).checked = true;
+                    @*document.getElementById(toogleButtonId).value = "checked";*@
+                }
+    @*alert(!document.getElementById(toogleButtonId).checked);// To verify*@
+            }
+</script>
 </html>
 

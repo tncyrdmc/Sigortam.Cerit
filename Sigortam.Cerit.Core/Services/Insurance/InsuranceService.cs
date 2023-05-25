@@ -102,14 +102,22 @@ namespace Sigortam.Cerit.Core.Services.Insurance
         }
         public List<InsuranceCompanyDto> GetInsuranceCompanys()
         {
-            return _context.InsuranceCompany.Select(x => new InsuranceCompanyDto
+            return _context.InsuranceCompany.OrderByDescending(x=> x.IsActive).Select(x => new InsuranceCompanyDto
             {
                 IsActive = x.IsActive,
                 InsuranceCompanyId = x.InsuranceCompanyId,
                 Name = x.Name,
-                Photo = x.Photo
+                Photo = x.Photo,
+                ImageSvgUrl = x.ImageSvgUrl,
             }).ToList();
                 
+        }
+        public void UpdateInsuranceCompanys(List<InsuranceCompanyDto> insuranceCompanyDtos)
+        {
+            var insuranceCompany = _context.InsuranceCompany.ToList();
+            insuranceCompany.ForEach(x => x.IsActive = insuranceCompanyDtos.First(y => y.InsuranceCompanyId == x.InsuranceCompanyId).IsActive);
+            _context.UpdateRange(insuranceCompany);
+            _context.SaveChanges();
         }
     }
 }
