@@ -43,6 +43,22 @@ namespace Sigortam.Cerit.Controllers
                 return Json(new { Message = "İnternet bağlantınızı kontrol edin", Code = ResultType.ConnectionFailed });
             }
         }
+        [HttpPost]
+        public JsonResult GetUserInformation(string userIdentity)
+        {
+            if(userIdentity == null || userIdentity.Length != 11)
+            {
+                return Json(new { Message = "Lütfen Tc alanını doldurunuz" });
+
+            }
+            var user = _servis.GetUserInformation(userIdentity);
+            if(user == null)
+            {
+                return Json(new { Message = "Böyle bir kayıt bulunmadı" });
+            }
+            return Json(user);
+        }
+
 
     }
 }

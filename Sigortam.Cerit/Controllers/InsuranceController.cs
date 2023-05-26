@@ -15,7 +15,8 @@ namespace Sigortam.Cerit.Controllers
         }
         public IActionResult Index()
         {
-           var insurances =  _servis.GetInsurances().OrderBy(x=> x.IsActive).ToList();
+            var insurances = _servis.GetInsurances().OrderBy(x => x.IsActive).ToList();
+            ViewBag.InsuranceCompany = _servis.GetInsuranceCompanys().ToList();
             return View(insurances);
         }
         public IActionResult Insurance(InsuranceDto insurance)
@@ -55,7 +56,7 @@ namespace Sigortam.Cerit.Controllers
                 {
                     workbook.SaveAs(stream);
                     var content = stream.ToArray();
-                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Sigortalarım_"+DateTime.Now.ToString("dd/M/yyyy", CultureInfo.InvariantCulture)+".xlsx");
+                    return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Sigortalarım_" + DateTime.Now.ToString("dd/M/yyyy", CultureInfo.InvariantCulture) + ".xlsx");
                 }
             }
         }
@@ -64,7 +65,7 @@ namespace Sigortam.Cerit.Controllers
         {
             //Servisten çekmek yerine dataları sayfadan güncel halini almak gerekiyor search için sıkıntılı durumlar yaşanmasın.
             var insurances = _servis.GetInsurances();
-            if(filterData.FilterSort == "userFullName")
+            if (filterData.FilterSort == "userFullName")
             {
                 var insurancesfilter = insurances.OrderByDescending(x => x.User.FullName);
                 return Json("userFullName");

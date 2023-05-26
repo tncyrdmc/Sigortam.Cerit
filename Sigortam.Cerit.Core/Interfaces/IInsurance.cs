@@ -13,5 +13,6 @@ namespace Sigortam.Cerit.Core.Interfaces
         List<InsuranceDto> GetInsurances();
         List<InsuranceCompanyDto> GetInsuranceCompanys();
         void UpdateInsuranceCompanys(List<InsuranceCompanyDto> insuranceCompanyDtos);
+        UserDto GetUserInformation(string userIdentity);
     }
 }

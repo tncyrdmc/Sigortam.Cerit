@@ -127,5 +127,17 @@ namespace Sigortam.Cerit.Core.Services.Insurance
             _context.UpdateRange(insuranceCompany);
             _context.SaveChanges();
         }
+        public UserDto GetUserInformation(string userIdentity)
+        {
+           var user = _context.User.FirstOrDefault(x => x.IdentificationNumber == Convert.ToDouble(userIdentity));
+
+            return user != null ? new UserDto
+            {
+                BirthYear = user.BirthYear,
+                IdentificationNumber = user.IdentificationNumber,
+                Name = user.Name,
+                LastName = user.LastName
+            } : null;
+        }
     }
 }
