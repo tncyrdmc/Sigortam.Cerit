@@ -11,16 +11,21 @@
             validate++;
         }
     }
-    //var forms2 = document.querySelectorAll('.needs-validation').filter(x => x.id != "insuranceStartDate" || x.id != "insuranceEndDate")
     debugger;
+    //var text = selectInsurance.options[selectInsurance.selectedIndex].text;
+    var insuranceCompanyName = document.querySelectorAll('.selected')[0].textContent;
+    var InsuranceCompanyDto = { Name: insuranceCompanyName}
+
+    //var forms2 = document.querySelectorAll('.needs-validation').filter(x => x.id != "insuranceStartDate" || x.id != "insuranceEndDate")
     if (validate === 0) {
         var user = {
             Name: document.getElementById("name").value, LastName: document.getElementById("lastName").value, IdentificationNumber: document.getElementById("identificationNumber").value,
-            BirthYear: document.getElementById("birthDate").value
+            BirthYear: document.getElementById("birthDate").value, Price: document.getElementById("price").value
         }
 
         var userIdentityCheckDto = {
-            InsuranceStartDate: document.getElementById("insuranceStartDate").value, InsuranceEndDate: document.getElementById("insuranceEndDate").value, PlateNumber: document.getElementById("plateNumber").value, User: user
+            InsuranceStartDate: document.getElementById("insuranceStartDate").value, InsuranceEndDate: document.getElementById("insuranceEndDate").value, PlateNumber: document.getElementById("plateNumber").value,
+            User: user, InsuranceCompany: InsuranceCompanyDto
         };
 
         $.ajax({

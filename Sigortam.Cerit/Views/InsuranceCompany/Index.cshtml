@@ -22,8 +22,8 @@
     <link rel="stylesheet" href="~/css/calender.css">
 </head>
 <body>
-    <div class="app-container backGround">
-        <table class="table">
+    <div class="backGround" style="width:100%; height:80%; overflow:auto;">
+        <table class="table" >
             <thead class="thead-dark">
                 <tr style="color:gray">
                     <th scope="col">#</th>
@@ -35,9 +35,9 @@
             @foreach (var insuranceCompany in Model)
             {
                 <tbody>
-                    <tr style="color:white">
+                    <tr style="color:white ; width:20px;">
                         <th scope="row">@count</th>
-                        <td> <img src="@insuranceCompany.ImageSvgUrl" width="70" height="25" alt="product"></td>
+                        <td> <img src="@insuranceCompany.ImageSvgUrl" width="100" height="35" alt="product"></td>
                         <td>@insuranceCompany.Name</td>
                         @*<td id="toggleButton+@count" class="toggleBody"><input type="checkbox"></td>*@
                         @*                        @if (insuranceCompany.IsActive)

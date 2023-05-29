@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Sigortam.Cerit.Common.Dtos;
 using Sigortam.Cerit.Core.Interfaces;
+using Sigortam.Cerit.Models;
 using System.Globalization;
 
 namespace Sigortam.Cerit.Controllers
@@ -16,7 +17,7 @@ namespace Sigortam.Cerit.Controllers
         public IActionResult Index()
         {
             var insurances = _servis.GetInsurances().OrderBy(x => x.IsActive).ToList();
-            ViewBag.InsuranceCompany = _servis.GetInsuranceCompanys().ToList();
+            ViewBag.InsuranceCompany = _servis.GetInsuranceCompanys().Where(x=> x.IsActive).ToList();
             return View(insurances);
         }
         public IActionResult Insurance(InsuranceDto insurance)
@@ -126,6 +127,11 @@ namespace Sigortam.Cerit.Controllers
                 return Json("isActiveDesc");
             }
             return Json(true);
+        }
+        public JsonResult GetInsuranceInformation(int insuranceId) 
+        {
+            var insurance = _servis.GetInsuranceInformation(insuranceId);
+            return Json(new { Insurance = insurance });
         }
     }
 }

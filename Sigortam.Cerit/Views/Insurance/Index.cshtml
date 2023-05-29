@@ -3,7 +3,8 @@
 @model List<Sigortam.Cerit.Common.Dtos.InsuranceDto>
 @{
     ViewData["Title"] = "Insurance";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    //Layout = null;
+    //Layout = "~/Views/Shared/_Layout.cshtml";
     var count = 0;
     var insurancesCompanys = (List<InsuranceCompanyDto>)ViewBag.InsuranceCompany;
 }
@@ -24,19 +25,13 @@
     <link rel="stylesheet" href="~/css/semantic.css">
     <link rel="stylesheet" href="~/css/semantic.min.css">
     <link rel="stylesheet" href="~/css/dropDown.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
     <!-- partial:index.partial.html -->
     <div class="app-container">
         <div class="app-content">
             <div class="app-content-header">
-                @*<h1 class="app-content-headerText">Products</h1>*@
-                @*                <button class="mode-switch" title="Switch Theme">
-                    <svg class="moon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="24" height="24" viewBox="0 0 24 24">
-                    <defs></defs>
-                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
-                    </svg>
-                    </button>*@
                 <!-- Button trigger modal -->
                 <button class="app-content-headerButton" onclick="DownloadExcelInsurance()">Excel Export</button>
                 <button class="app-content-headerButton" data-toggle="modal" data-target="#exampleModalCenter">Yeni Sigorta Kaydı Ekle</button>
@@ -90,17 +85,23 @@
                                             Lütfen plaka numarası kısmını doldurun.
                                         </div>
                                     </div>
+                                    <div class="col">
+                                        <input type="text" id="price" class="form-control rounded-right needs-validation-text" placeholder="Ücret" required />
+                                        <div class="invalid-feedback">
+                                            Lütfen ücret kısmını doldurun.
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="form-group d-flex row">
                                     <div class="col">
                                         <div class="ui fluid search selection dropdown">
                                             <input type="hidden" name="country">
                                             <i class="dropdown icon"></i>
-                                            <div class="default text">Select Country</div>
+                                            <div id="selectedInsurancesCompanyText" class="default text">Sigorta Seç</div>
                                             <div class="menu">
                                                 @foreach (var insuranceCompany in insurancesCompanys)
                                                 {
-                                                    <div class="item product-cell image"><img style="width:20px ; height:20px" src="@insuranceCompany.ImageSvgUrl" alt="product">@insuranceCompany.Name</div>
+                                                    <div value="@insuranceCompany.InsuranceCompanyId" class="item product-cell image selectInsurance"><img style="width:50px ; height:30px" src="@insuranceCompany.ImageSvgUrl" alt="product">@insuranceCompany.Name</div>
                                                 }
                                             </div>
                                         </div>
@@ -123,25 +124,10 @@
                                 <div>
                                     <button type="submit" class="btn btn-primary container" onclick="identityCheck()">Kayıt Et</button>
                                 </div>
-                                @*                                <div class="form-group d-md-flex">
-                                    <div class="form-check w-50">
-                                    <label class="custom-control fill-checkbox">
-                                    <input type="checkbox" class="fill-control-input">
-                                    <span class="fill-control-indicator"></span>
-                                    <span class="fill-control-description">Remember Me</span>
-                                    </label>
-                                    </div>
-                                    <div class="w-50 text-md-right">
-                                    <a href="#">Forgot Password</a>
-                                    </div>
-                                    </div>*@
                             </form>
                             <div class="col-md-4">
                                 <button class="app-content-headerButton" onclick="GetUserInformation()">Kişiyi Getir</button>
                             </div>
-                            @*                                <div class="modal-footer justify-content-center">
-                                <p>Not a member? <a href="#">Create an account</a></p>
-                                </div>*@
                         </div>
                     </div>
                 </div>
@@ -185,7 +171,7 @@
                 </div>
             </div>
             <div class="products-area-wrapper tableView">
-                <div class="products-header">
+                <div class="products-header ">
                     <div class="product-cell image">
                         Şirket
                         <button class="sort-button">
@@ -222,9 +208,16 @@
                             <svg xmlns="http://www.w3.org/2000/svg" id="isActive" class="isActive" onclick="filterSort('isActive')" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z" /></svg>
                         </button>
                     </div>
+                    <div class="product-cell price">
+                        Düzenle
+                    </div>
                 </div>
                 @foreach (var insurance in Model)
                 {
+                    var username = insurance.User?.FullName ?? string.Empty;
+                    var imageSvgUrl = insurance.InsuranceCompany?.ImageSvgUrl ?? string.Empty;
+                    var insuranceCompanyName = insurance.InsuranceCompany?.Name ?? string.Empty;
+
                     count += 1;
                     <div class="products-row">
                         <button class="cell-more-button">
@@ -235,14 +228,15 @@
                             <span>&nbsp;</span>
                             <span>&nbsp;</span>
                             <span>&nbsp;</span>
-                            <img src="@insurance.InsuranceCompany.ImageSvgUrl" alt="product">
-                            <span>@insurance.InsuranceCompany.Name</span>
+                            <img src="@imageSvgUrl" alt="product">
+                            <span>@insuranceCompanyName</span>
                         </div>
-                        <div class="product-cell category"><span class="cell-label">Kullanıcı:</span>@insurance.User.FullName</div>
+
+                        <div class="product-cell category"><span class="cell-label">Kullanıcı:</span>@username</div>
                         <div class="product-cell category"><span class="cell-label">Başlangıç Tarihi:</span>@insurance.InsuranceStartDate.ToString("dd/M/yyyy", CultureInfo.InvariantCulture)</div>
                         <div class="product-cell category"><span class="cell-label">Bitiş Tarihi:</span>@insurance.InsuranceEndDate.ToString("dd/M/yyyy", CultureInfo.InvariantCulture)</div>
                         <div class="product-cell price"><span class="cell-label">Ücret:</span>@insurance.Price ₺</div>
-                        <div class="product-cell stock"><span class="cell-label">Durum:</span>@insurance.RemainingTime</div>
+                        <div class="product-cell stock"><span class="cell-label">Durum:</span>@insurance.RemainingTimeYearMonthDayType</div>
 
                         <div class="product-cell status-cell">
                             <span class="cell-label">Status:</span>
@@ -256,10 +250,11 @@
                                 <span class="status disabled">Pasif Durumda</span>
                             }
                         </div>
-
-                        @*<div class="product-cell sales"><span class="cell-label">Sales:</span>11</div>*@
-                        @*<div class="product-cell stock"><span class="cell-label">Stock:</span>36</div>*@
-                        @*<div class="product-cell price"><span class="cell-label">Price:</span>$560</div>*@
+                        <div class="product-cell stock">
+                            <span class="cell-label">Düzenle:</span>
+                            <a href="#" onclick="GetInsuranceInformation('@insurance.InsuranceId')" style="width:20px; height:20px;" class="fa fa-edit" data-toggle="modal" data-target="#exampleModalCenter">
+                            </a>
+                        </div>
                     </div>
                 }
             </div>
@@ -338,6 +333,34 @@
                         }
                             }
                         });
+            }
+            function GetInsuranceInformation(insuranceId){
+                            $.ajax({
+            type: "POST",
+            url: "/Insurance/GetInsuranceInformation/",
+            data: {insuranceId:insuranceId},
+            dataType: "json",
+            success:  function (insurance) {
+                debugger;
+
+                        let selectedValue = "<div id='selectedInsurancesCompanyText' class='text'><img style='width:50px ; height:30px' src='imgUrl' alt='product'>insuranceCompany</div>";
+                        selectedValue =  selectedValue.replace('imgUrl',insurance.insurance.insuranceCompany.imageSvgUrl).replace('insuranceCompany',insurance.insurance.insuranceCompany.name);
+                        document.getElementById("selectedInsurancesCompanyText").innerHTML = selectedValue;
+
+                        //if(insurance.code == 101){
+                        //insurance = JSON.parse(insurance);
+                        document.getElementById("name").value = insurance.insurance.user.name;
+                        document.getElementById("lastName").value = insurance.insurance.user.lastName;
+                        document.getElementById("identificationNumber").value = insurance.insurance.user.identificationNumber;
+                        document.getElementById("birthDate").value = insurance.insurance.user.birthYear;
+                        //document.getElementById("plateNumber").value = insurance.insurance.plateNumber;
+                        document.getElementById("price").value = insurance.insurance.price;
+                        document.getElementById("insuranceStartDate").value = insurance.insurance.insuranceStartDate.replace('T00:00:00','');
+                        document.getElementById("insuranceEndDate").value = insurance.insurance.insuranceEndDate.replace('T00:00:00','');
+                    //}
+                    }
+                });
+
             }
 
         // Example starter JavaScript for disabling form submissions if there are invalid fields

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Sigortam.Cerit.Core.Services.Insurance
 {
-    public partial class InsuranceService:IInsurance
+    public partial class InsuranceService : IInsurance
     {
         public ApplicationDbContext _context;
         public InsuranceService(ApplicationDbContext context)
@@ -23,10 +23,11 @@ namespace Sigortam.Cerit.Core.Services.Insurance
         {
             var user = new Sigortam.Cerit.Data.Entity.User();
             var vehicle = new Sigortam.Cerit.Data.Entity.Vehicle();
+            var insuranceCompany = _context.InsuranceCompany.FirstOrDefault(x => x.Name == insuranceDto.InsuranceCompany.Name);
 
             if (insuranceDto.User.UserId != default)
             {
-                 user = _context.User.FirstOrDefault(x => x.UserId == insuranceDto.User.UserId);
+                user = _context.User.FirstOrDefault(x => x.UserId == insuranceDto.User.UserId);
             }
             else
             {
@@ -65,6 +66,7 @@ namespace Sigortam.Cerit.Core.Services.Insurance
                 InsuranceStartDate = insuranceDto.InsuranceStartDate,
                 Price = insuranceDto.Price,
                 User = user,
+                InsuranceCompany = insuranceCompany,
                 //Vehicle = vehicle,
             };
 
@@ -74,43 +76,78 @@ namespace Sigortam.Cerit.Core.Services.Insurance
         }
         public List<InsuranceDto> GetInsurances()
         {
-            return _context.Insurance.Select(x=> new InsuranceDto
-            { 
-            InsuranceEndDate = x.InsuranceEndDate,    
-            InsuranceId = x.InsuranceId,    
-            InsuranceStartDate = x.InsuranceStartDate,
-            Price = x.Price,
-            User = x.User != null  ? new UserDto 
+            return _context.Insurance.Select(x => new InsuranceDto
             {
-                Name = x.User.Name,
-                LastName =x.User.LastName,
-                BirthYear = x.User.BirthYear,
-                IdentificationNumber =x.User.IdentificationNumber,
-                PhoneNumber = x.User.PhoneNumber,
-                UserId = x.User.UserId,
-            } : default,
-            Vehicle = x.Vehicle != null ? new VehicleDto 
-            { 
-                 Brand = x.Vehicle.Brand,
-                 Model = x.Vehicle.Model,
-                 PlateNumber = x.Vehicle.PlateNumber,
-                 VehicleId = x.Vehicle.VehicleId,
-                 VehicleYear = x.Vehicle.VehicleYear,
-            }: default,
-            InsuranceCompany = x.InsuranceCompany != null ? new InsuranceCompanyDto
-            {
-                IsActive = x.InsuranceCompany.IsActive,
-                ImageSvgUrl = x.InsuranceCompany.ImageSvgUrl,
-                InsuranceCompanyId = x.InsuranceCompany.InsuranceCompanyId,
-                Name = x.InsuranceCompany.Name,
-                Photo  = default,
-            }: default
+                InsuranceEndDate = x.InsuranceEndDate,
+                InsuranceId = x.InsuranceId,
+                InsuranceStartDate = x.InsuranceStartDate,
+                Price = x.Price,
+                User = x.User != null ? new UserDto
+                {
+                    Name = x.User.Name,
+                    LastName = x.User.LastName,
+                    BirthYear = x.User.BirthYear,
+                    IdentificationNumber = x.User.IdentificationNumber,
+                    PhoneNumber = x.User.PhoneNumber,
+                    UserId = x.User.UserId,
+                } : default,
+                Vehicle = x.Vehicle != null ? new VehicleDto
+                {
+                    Brand = x.Vehicle.Brand,
+                    Model = x.Vehicle.Model,
+                    PlateNumber = x.Vehicle.PlateNumber,
+                    VehicleId = x.Vehicle.VehicleId,
+                    VehicleYear = x.Vehicle.VehicleYear,
+                } : default,
+                InsuranceCompany = x.InsuranceCompany != null ? new InsuranceCompanyDto
+                {
+                    IsActive = x.InsuranceCompany.IsActive,
+                    ImageSvgUrl = x.InsuranceCompany.ImageSvgUrl,
+                    InsuranceCompanyId = x.InsuranceCompany.InsuranceCompanyId,
+                    Name = x.InsuranceCompany.Name,
+                    Photo = default,
+                } : default
             })
              .ToList();
         }
+        public InsuranceDto GetInsuranceInformation(int insuranceId)
+        {
+            return _context.Insurance.Select(x => new InsuranceDto
+            {
+                InsuranceEndDate = x.InsuranceEndDate,
+                InsuranceId = x.InsuranceId,
+                InsuranceStartDate = x.InsuranceStartDate,
+                Price = x.Price,
+                User = x.User != null ? new UserDto
+                {
+                    Name = x.User.Name,
+                    LastName = x.User.LastName,
+                    BirthYear = x.User.BirthYear,
+                    IdentificationNumber = x.User.IdentificationNumber,
+                    PhoneNumber = x.User.PhoneNumber,
+                    UserId = x.User.UserId,
+                } : default,
+                Vehicle = x.Vehicle != null ? new VehicleDto
+                {
+                    Brand = x.Vehicle.Brand,
+                    Model = x.Vehicle.Model,
+                    PlateNumber = x.Vehicle.PlateNumber,
+                    VehicleId = x.Vehicle.VehicleId,
+                    VehicleYear = x.Vehicle.VehicleYear,
+                } : default,
+                InsuranceCompany = x.InsuranceCompany != null ? new InsuranceCompanyDto
+                {
+                    IsActive = x.InsuranceCompany.IsActive,
+                    ImageSvgUrl = x.InsuranceCompany.ImageSvgUrl,
+                    InsuranceCompanyId = x.InsuranceCompany.InsuranceCompanyId,
+                    Name = x.InsuranceCompany.Name,
+                    Photo = default,
+                } : default
+            }).FirstOrDefault(x => x.InsuranceId == insuranceId);
+        }
         public List<InsuranceCompanyDto> GetInsuranceCompanys()
         {
-            return _context.InsuranceCompany.OrderByDescending(x=> x.IsActive).Select(x => new InsuranceCompanyDto
+            return _context.InsuranceCompany.OrderByDescending(x => x.IsActive).Select(x => new InsuranceCompanyDto
             {
                 IsActive = x.IsActive,
                 InsuranceCompanyId = x.InsuranceCompanyId,
@@ -118,7 +155,7 @@ namespace Sigortam.Cerit.Core.Services.Insurance
                 Photo = x.Photo,
                 ImageSvgUrl = x.ImageSvgUrl,
             }).ToList();
-                
+
         }
         public void UpdateInsuranceCompanys(List<InsuranceCompanyDto> insuranceCompanyDtos)
         {
@@ -129,7 +166,7 @@ namespace Sigortam.Cerit.Core.Services.Insurance
         }
         public UserDto GetUserInformation(string userIdentity)
         {
-           var user = _context.User.FirstOrDefault(x => x.IdentificationNumber == Convert.ToDouble(userIdentity));
+            var user = _context.User.FirstOrDefault(x => x.IdentificationNumber == Convert.ToDouble(userIdentity));
 
             return user != null ? new UserDto
             {

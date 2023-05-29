@@ -15,6 +15,18 @@ namespace Sigortam.Cerit.Controllers
         public IActionResult Index()
         {
             var insurancesCompany = _servis.GetInsuranceCompanys().ToList();
+            insurancesCompany.AddRange(_servis.GetInsuranceCompanys().ToList());
+            insurancesCompany.AddRange(_servis.GetInsuranceCompanys().ToList());
+            insurancesCompany.AddRange(_servis.GetInsuranceCompanys().ToList());
+            insurancesCompany.AddRange(_servis.GetInsuranceCompanys().ToList());
+            insurancesCompany.AddRange(_servis.GetInsuranceCompanys().ToList());
+            insurancesCompany.AddRange(_servis.GetInsuranceCompanys().ToList());
+            insurancesCompany.AddRange(_servis.GetInsuranceCompanys().ToList());
+            insurancesCompany.AddRange(_servis.GetInsuranceCompanys().ToList());
+            insurancesCompany.AddRange(_servis.GetInsuranceCompanys().ToList());
+            insurancesCompany.AddRange(_servis.GetInsuranceCompanys().ToList());
+            insurancesCompany.AddRange(_servis.GetInsuranceCompanys().ToList());
+            insurancesCompany.AddRange(_servis.GetInsuranceCompanys().ToList());
             //var insurancesCompany = new List<InsuranceCompanyDto>();
             //insurancesCompany.Add(new InsuranceCompanyDto { InsuranceCompanyId = 1, Name = "AKSigorta AŞ", IsActive = true, ImageSvgUrl = "https://cdn.freebiesupply.com/logos/large/2x/aksigorta-logo-png-transparent.png" });
             //insurancesCompany.Add(new InsuranceCompanyDto { InsuranceCompanyId = 2, Name = "Allianz Sigorta AŞ", IsActive = true, ImageSvgUrl = "https://upload.wikimedia.org/wikipedia/commons/4/4b/Allianz.svg" });
