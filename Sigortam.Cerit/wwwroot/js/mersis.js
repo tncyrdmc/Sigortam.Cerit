@@ -11,21 +11,18 @@
             validate++;
         }
     }
-    debugger;
-    //var text = selectInsurance.options[selectInsurance.selectedIndex].text;
-    var insuranceCompanyName = document.querySelectorAll('.selected')[0].textContent;
-    var InsuranceCompanyDto = { Name: insuranceCompanyName}
+    var insuranceCompany = document.querySelectorAll('.selected')[0];
+    var InsuranceCompanyDto = { Name: insuranceCompany.textContent, InsuranceCompanyId: insuranceCompany.getAttribute('value') };
 
-    //var forms2 = document.querySelectorAll('.needs-validation').filter(x => x.id != "insuranceStartDate" || x.id != "insuranceEndDate")
     if (validate === 0) {
         var user = {
             Name: document.getElementById("name").value, LastName: document.getElementById("lastName").value, IdentificationNumber: document.getElementById("identificationNumber").value,
-            BirthYear: document.getElementById("birthDate").value, Price: document.getElementById("price").value
+            BirthYear: document.getElementById("birthDate").value
         }
 
         var userIdentityCheckDto = {
             InsuranceStartDate: document.getElementById("insuranceStartDate").value, InsuranceEndDate: document.getElementById("insuranceEndDate").value, PlateNumber: document.getElementById("plateNumber").value,
-            User: user, InsuranceCompany: InsuranceCompanyDto
+            User: user, InsuranceCompany: InsuranceCompanyDto, InsuranceId: document.getElementById("insuranceId").value, Price: document.getElementById("price").value
         };
 
         $.ajax({
@@ -38,13 +35,16 @@
                 debugger;
                 if (result.code == 101) {
                     alert(result.message);
-                    location.href = "/Insurance/Insurance";
+                    location.href = "/Insurance/Index";
                 }
                 else {
                     alert(result.message)
                 }
             }
         });
+    }
+    else {
+        alert("Bütün alanları doldurduğunuzdan emin olun!")
     }
 
     //$.post("Mernis/IdentityCheck", { userIdentityCheckDto: userIdentityCheckDto }, function (result) {

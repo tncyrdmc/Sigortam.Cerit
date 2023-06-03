@@ -40,6 +40,14 @@ namespace Sigortam.Cerit.Controllers
                 workSheet.Cell(1, 6).Value = "Kalan Gün";
                 workSheet.Cell(1, 7).Value = "Durum";
 
+                workSheet.Cell(1, 1).Style.Fill.BackgroundColor = XLColor.LightBlue;
+                workSheet.Cell(1, 2).Style.Fill.BackgroundColor = XLColor.LightBlue;
+                workSheet.Cell(1, 3).Style.Fill.BackgroundColor = XLColor.LightBlue;
+                workSheet.Cell(1, 4).Style.Fill.BackgroundColor = XLColor.LightBlue;
+                workSheet.Cell(1, 5).Style.Fill.BackgroundColor = XLColor.LightBlue;
+                workSheet.Cell(1, 6).Style.Fill.BackgroundColor = XLColor.LightBlue;
+                workSheet.Cell(1, 7).Style.Fill.BackgroundColor = XLColor.LightBlue;
+
                 var insurancesCount = 2;
 
                 foreach (var insurance in insurances)

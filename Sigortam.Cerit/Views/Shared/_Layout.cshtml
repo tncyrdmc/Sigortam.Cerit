@@ -1,5 +1,5 @@
 ﻿@using Sigortam.Cerit.Common
-@{var webSiteName = GlobalConstruction.WebSiteName;}
+@*@{var webSiteName = GlobalConstruction.WebSiteName;}*@
 
 <!DOCTYPE html>
 <!-- Coding by CodingNepal | www.codingnepalweb.com -->
@@ -118,12 +118,12 @@
                 </ul>
             </li>
             <li>
-                <a href="#">
+                <a asp-controller="Setting" asp-action="Index">
                     <i class='bx bx-cog'></i>
                     <span class="link_name">Setting</span>
                 </a>
                 <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Setting</a></li>
+                     <li><a class="link_name" asp-controller="Setting" asp-action="Index">Setting</a></li>
                 </ul>
             </li>
             <li>

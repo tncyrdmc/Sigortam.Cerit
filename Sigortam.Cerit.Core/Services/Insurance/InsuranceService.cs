@@ -23,7 +23,8 @@ namespace Sigortam.Cerit.Core.Services.Insurance
         {
             var user = new Sigortam.Cerit.Data.Entity.User();
             var vehicle = new Sigortam.Cerit.Data.Entity.Vehicle();
-            var insuranceCompany = _context.InsuranceCompany.FirstOrDefault(x => x.Name == insuranceDto.InsuranceCompany.Name);
+
+            var insuranceCompany = _context.InsuranceCompany.FirstOrDefault(x => x.InsuranceCompanyId == insuranceDto.InsuranceCompany.InsuranceCompanyId);
 
             if (insuranceDto.User.UserId != default)
             {
@@ -62,6 +63,7 @@ namespace Sigortam.Cerit.Core.Services.Insurance
 
             var insurance = new Sigortam.Cerit.Data.Entity.Insurance
             {
+                InsuranceId = insuranceDto.InsuranceId,
                 InsuranceEndDate = insuranceDto.InsuranceEndDate,
                 InsuranceStartDate = insuranceDto.InsuranceStartDate,
                 Price = insuranceDto.Price,
@@ -70,7 +72,14 @@ namespace Sigortam.Cerit.Core.Services.Insurance
                 //Vehicle = vehicle,
             };
 
-            _context.Insurance.Add(insurance);
+            if (insuranceDto.InsuranceId > 0)
+            {
+                _context.Insurance.Update(insurance);
+            }
+            else
+            {
+                _context.Insurance.Add(insurance);
+            }
             _context.SaveChanges();
 
         }
