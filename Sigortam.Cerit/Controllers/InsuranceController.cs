@@ -141,5 +141,10 @@ namespace Sigortam.Cerit.Controllers
             var insurance = _servis.GetInsuranceInformation(insuranceId);
             return Json(new { Insurance = insurance });
         }
+        public JsonResult AddOrUpdateInsurance(InsuranceDto userIdentityCheckDto)
+        {
+            _servis.AddOrUpdateInsurance(userIdentityCheckDto);
+            return Json(new { Message = "Başarılı bir şekilde kayıt oluşturuldu", Code = ResultType.Succeeded });
+        }
     }
 }

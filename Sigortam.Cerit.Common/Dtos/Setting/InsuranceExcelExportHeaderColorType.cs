@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Sigortam.Cerit.Common.Dtos.Setting
 {
-    public class SettingDto
+    public enum InsuranceExcelExportHeaderColor
     {
-        public RemainingTime RemainingTimeType { get; set; }
-        public InsuranceExcelExportHeaderColor ExcelExportHeaderColor { get; set; }
+        LigthBlue = 0,
+        LigthRed = 1,
+        LigthGrey = 2
     }
-
 }
-
