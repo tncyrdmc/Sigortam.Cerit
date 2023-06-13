@@ -1,6 +1,8 @@
 ﻿using ClosedXML.Excel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Sigortam.Cerit.Common.Dtos;
+using Sigortam.Cerit.Common.Dtos.Filter;
 using Sigortam.Cerit.Core.Interfaces;
 using Sigortam.Cerit.Models;
 using System.Globalization;
@@ -9,26 +11,90 @@ namespace Sigortam.Cerit.Controllers
 {
     public class InsuranceController : Controller
     {
-        public IInsurance _servis;
-        public InsuranceController(IInsurance servis)
+        private IInsurance _servis;
+        private readonly IMemoryCache _memCache;
+        const string _insuranceKey = "insuranceList";
+        const string _filterKey = "filter";
+        const string _searchFilterKey = "searchFilterKey";
+
+
+        public InsuranceController(IInsurance servis, IMemoryCache memCache)
         {
             _servis = servis;
+            _memCache = memCache;
+
         }
+
         public IActionResult Index()
         {
-            var insurances = _servis.GetInsurances().OrderBy(x => x.IsActive).ToList();
-            ViewBag.InsuranceCompany = _servis.GetInsuranceCompanys().Where(x=> x.IsActive).ToList();
+            var insurances = new List<InsuranceDto>();
+
+            if (_memCache.TryGetValue(_insuranceKey, out List<InsuranceDto> insuranceMemoryList))
+            {
+                insurances = insuranceMemoryList.ToList();
+            }
+            else
+            {
+                insurances = _servis.GetInsurances();
+            }
+            if (_memCache.TryGetValue(_filterKey, out FilterDto filter))
+            {
+                ViewBag.Filter = filter;
+            }
+
+            ViewBag.InsuranceActiveCompany = _servis.GetInsuranceCompanys().Where(x => x.IsActive).ToList();
+            ViewBag.InsuranceCompany = _servis.GetInsuranceCompanys().ToList();
             return View(insurances);
         }
-        public IActionResult Insurance(InsuranceDto insurance)
+        public IActionResult FilterInsurance(FilterDto filterDto)
         {
-            //var services = new Sigortam.Cerit.Core.Services.Insurance.InsuranceService();
-            //services.AddOrUpdateInsurance(insurance);
-            return View();
+            var insurances = new List<InsuranceDto>();
+
+            var cacheExpOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpiration = DateTime.Now.AddMinutes(30),
+                Priority = CacheItemPriority.Normal
+            };
+            if (_memCache.TryGetValue(_insuranceKey, out List<InsuranceDto> insuranceMemoryList) && !filterDto.IsResetCasheFilter && insuranceMemoryList.Count > 0)
+            {
+                insurances = insuranceMemoryList.ToList();
+            }
+            else
+            {
+                insurances = _servis.GetInsurances();
+            }
+
+            if (filterDto.StatusType != StatusType.All)
+            {
+                bool isActive = filterDto.StatusType == StatusType.Enable ? true : false;
+                insurances = insurances.Where(x => x.IsActive == isActive).ToList();
+            }
+            if (filterDto.InsuranceCompanyId != default)
+            {
+                insurances = insurances.Where(x => x.InsuranceCompany != null && x.InsuranceCompany.InsuranceCompanyId == filterDto.InsuranceCompanyId).ToList();
+            }
+            if (!String.IsNullOrEmpty(filterDto.SearchText))
+            {
+                insurances = insurances.Where(x => x.SearchableText.Contains(filterDto.SearchText.ToLower())).ToList();
+            }
+            insurances = insurances.OrderBy(x => x.IsActive).ToList();
+            _memCache.Set(_filterKey, filterDto, cacheExpOptions);
+            _memCache.Set(_insuranceKey, insurances, cacheExpOptions);
+            return Json(new { redirectToUrl = Url.Action("Index", "Insurance") });
         }
         public IActionResult ExcelExportInsurance()
         {
-            var insurances = _servis.GetInsurances();
+            var insurances = new List<InsuranceDto>();
+
+            if (_memCache.TryGetValue(_insuranceKey, out List<InsuranceDto> insuranceMemoryList))
+            {
+                insurances = insuranceMemoryList.ToList();
+            }
+            else
+            {
+                insurances = _servis.GetInsurances();
+            }
+
             using (var workbook = new XLWorkbook())
             {
                 var workSheet = workbook.Worksheets.Add("Sigortalarım");
@@ -136,10 +202,14 @@ namespace Sigortam.Cerit.Controllers
             }
             return Json(true);
         }
-        public JsonResult GetInsuranceInformation(int insuranceId) 
+        public JsonResult GetInsuranceInformation(int insuranceId)
         {
             var insurance = _servis.GetInsuranceInformation(insuranceId);
             return Json(new { Insurance = insurance });
+        }
+        private List<InsuranceDto> GetInsurances()
+        {
+            return _servis.GetInsurances().OrderBy(x => x.IsActive).ToList();
         }
         public JsonResult AddOrUpdateInsurance(InsuranceDto userIdentityCheckDto)
         {

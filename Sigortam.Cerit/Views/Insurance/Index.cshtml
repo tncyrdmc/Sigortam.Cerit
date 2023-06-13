@@ -1,12 +1,15 @@
 ﻿@using System.Globalization
 @using Sigortam.Cerit.Common.Dtos
+@using Sigortam.Cerit.Common.Dtos.Filter
 @model List<Sigortam.Cerit.Common.Dtos.InsuranceDto>
 @{
-    ViewData["Title"] = "Insurance";
-    //Layout = null;
-    //Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Tüm Sigortalarım";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     var count = 0;
+    var insurancesActiveCompanys = (List<InsuranceCompanyDto>)ViewBag.InsuranceActiveCompany;
     var insurancesCompanys = (List<InsuranceCompanyDto>)ViewBag.InsuranceCompany;
+    var filter = (FilterDto)ViewBag.Filter;
+    var searchText = filter?.SearchText ?? string.Empty;
 }
 
 <h1 class="app-content-headerText ">&nbsp;&nbsp;Tüm sigortaları görüntüle</h1>
@@ -14,7 +17,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CodePen - Products Dashboard UI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
     <link rel="stylesheet" href="~/css/style.css">
     <link rel="stylesheet" href="~/css/grid.css">
@@ -34,8 +36,10 @@
             <div class="app-content-header">
                 <!-- Button trigger modal -->
                 <button class="app-content-headerButton" onclick="DownloadExcelInsurance()">Excel Export</button>
-                <input id="insuranceId" value="0" style="visibility:hidden"/>
+                <input id="insuranceId" value="0" style="visibility:hidden" />
                 <button class="app-content-headerButton" data-toggle="modal" data-target="#exampleModalCenter">Yeni Sigorta Kaydı Ekle</button>
+                <button class="app-content-headerButton" data-toggle="modal" data-target="#exampleModalCenter2">Barcode Ekle</button>
+
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -67,7 +71,7 @@
                                 <div class="form-group d-flex row">
 
                                     <div class="col">
-                                        <input type="text" id="identificationNumber" class="form-control rounded-left needs-validation-text" placeholder="TC" required />
+                                        <input type="text" id="identificationNumber" class="form-control rounded-left needs-validation-text" value="@ViewBag.Barcode" placeholder="TC" required />
                                         <div class="invalid-feedback">
                                             Lütfen TC kısmını doldurun.
                                         </div>
@@ -100,7 +104,7 @@
                                             <i class="dropdown icon"></i>
                                             <div id="selectedInsurancesCompanyText" class="default text">Sigorta Seç</div>
                                             <div class="menu" id="menuSelect">
-                                                @foreach (var insuranceCompany in insurancesCompanys)
+                                                @foreach (var insuranceCompany in insurancesActiveCompanys)
                                                 {
                                                     <div value="@insuranceCompany.InsuranceCompanyId" class="item product-cell image selectInsurance"><img style="width:50px ; height:30px" src="@insuranceCompany.ImageSvgUrl" alt="product">@insuranceCompany.Name</div>
                                                 }
@@ -127,38 +131,86 @@
                                 </div>
                             </form>
                             <div class="col-md-4">
-                                <button class="app-content-headerButton" onclick="GetUserInformation()">Kişiyi Getir</button>
+                                @*<button class="app-content-headerButton" onclick="GetUserInformation()">Kişiyi Getir</button>*@
+                                <button class="app-content-headerButton" data-toggle="modal" data-target="#exampleModalCenter2">Barcode Ekle</button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Reader Modal-->
+                <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close d-flex align-items-center justify-content-center" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true" class="ion-ios-close"></span>
+                                </button>
+                            </div>
+                            <form asp-controller="Barcode" asp-action="Reader" method="post" enctype="multipart/form-data">
+                                <div class="card-body">
+                                    <div class="row mb-3">
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label><b>Barkod Resmi:</b></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-10">
+                                            <input type="file" name="file" class="form-control-file btn btn-primary">
+                                        </div>
+                                    </div>
+                                    @if (!String.IsNullOrEmpty(ViewBag.Barcode))
+                                    {
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <label><b>Barkod Numarası:</b></label>
+                                                <h4 class="text-danger"><b> @ViewBag.Barcode</b></h4>
+                                            </div>
+                                            <div class="col-9">
+                                                <img src="@ViewBag.BarcodeUrl" width="400">
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="card-footer">
+                                        <button type="submit" value="Reader" class="btn btn-primary" formtarget="_blank">Barkod Yükle</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="app-content-actions">
-                <input class="search-bar" placeholder="Search..." type="text">
+                <input class="search-bar" id="search-bar" placeholder="Search..." type="text" value="@searchText"  onchange="filtertSearch()">
                 <div class="app-content-actions-wrapper">
                     <div class="filter-button-wrapper">
-                        <button class="action-button filter jsFilter"><span>Filter</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg></button>
+                        <button class="action-button filter jsFilter"><span>Filtre</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg></button>
                         <div class="filter-menu">
-                            <label>Category</label>
-                            <select>
-                                <option>All Categories</option>
-                                <option>Furniture</option>
-                                <option>Decoration</option>
-                                <option>Kitchen</option>
-                                <option>Bathroom</option>
-                            </select>
-                            <label>Status</label>
-                            <select>
-                                <option>All Status</option>
-                                <option>Active</option>
-                                <option>Disabled</option>
+                            <label>Şirket</label>
+                            <div class="col">
+                                <div class="ui fluid search selection dropdown">
+                                    <input type="hidden" name="country">
+                                    <i class="dropdown icon"></i>
+                                    <div id="selectedInsurancesCompanyText" class="default text">Sigorta Seç</div>
+                                    <div class="menu" id="menuSelectFilter">
+                                        @foreach (var insuranceCompany in insurancesCompanys)
+                                        {
+                                            <div value="@insuranceCompany.InsuranceCompanyId" class="item product-cell image selectInsurance"><img style="width:50px ; height:30px" src="@insuranceCompany.ImageSvgUrl" alt="product">@insuranceCompany.Name</div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <label>Durum</label>
+                            <select id="statusFilter">
+                                <option value="All" selected="selected">Hepsi</option>
+                                <option value="Enable">Aktif</option>
+                                <option value="Disable">Pasif</option>
                             </select>
                             <div class="filter-menu-buttons">
-                                <button class="filter-button reset">
-                                    Reset
+                                <button class="filter-button reset" id="resetFilter" onclick="resetFilter()">
+                                    Filtreti Sıfırla
                                 </button>
-                                <button class="filter-button apply">
-                                    Apply
+                                <button class="filter-button apply" onclick="addFilter()">
+                                    Onayla
                                 </button>
                             </div>
                         </div>
@@ -272,6 +324,9 @@
     <script src="~/js/bootstrap.min.js"></script>
     <script src="~/js/main.js"></script>
     <script src="~/js/mersis.js"></script>
+    <script src="~/js/filter.js"></script>
+    <script src="~/js/excel.js"></script>
+    <script src="~/js/insurance.js"></script>
     <script src="~/js/choices.js"></script>
     <script src="~/js/flatpickr.js"></script>
     <script src="~/js/formValidate.js"></script>
@@ -287,33 +342,10 @@
     <script>
             const choices = new Choices('[data-trigger]',
             {
-                searchEnabled: false,
+                searchEnabled: true,
                 itemSelectText: '',
             });
 
-            function DownloadExcelInsurance(){
-                window.open("/Insurance/ExcelExportInsurance");
-            }
-            function filterSort(filterSortingId){
-            var filterData = { FilterSort : document.getElementById(filterSortingId).classList[0] , SearchWord : ""  };
-            $.ajax({
-            type: "POST",
-            url: "/Insurance/FilterSorting/",
-            data: filterData,
-            //dataType: "json",
-            success: async function (result) {
-                    if(result.includes('Desc')){
-                        document.getElementById(result.replace('Desc','')).classList.remove(result);
-                        document.getElementById(result.replace('Desc','')).classList.add(result.replace('Desc',''));
-                    }
-                    else{
-                        document.getElementById(result).classList.remove(result);
-                        document.getElementById(result).classList.add(result+"Desc");
-                    }
-                    //alert("Aycana aşığım");
-                    }
-                });
-            }
             function GetUserInformation(){
                 let userIdentity =  document.getElementById("identificationNumber").value;
                         $.ajax({
@@ -334,41 +366,7 @@
                             }
                         });
             }
-            function GetInsuranceInformation(insuranceId){
-                            $.ajax({
-            type: "POST",
-            url: "/Insurance/GetInsuranceInformation/",
-            data: {insuranceId:insuranceId},
-            dataType: "json",
-            success:  function (insurance) {
-                        document.getElementById("insuranceId").value = insuranceId;
-                        document.getElementById("name").value = insurance.insurance.user.name;
-                        document.getElementById("lastName").value = insurance.insurance.user.lastName;
-                        document.getElementById("identificationNumber").value = insurance.insurance.user.identificationNumber;
-                        document.getElementById("birthDate").value = insurance.insurance.user.birthYear;
-                        //document.getElementById("plateNumber").value = insurance.insurance.plateNumber;
-                        document.getElementById("price").value = insurance.insurance.price;
-                        document.getElementById("insuranceStartDate").value = insurance.insurance.insuranceStartDate.replace('T00:00:00','');
-                        document.getElementById("insuranceEndDate").value = insurance.insurance.insuranceEndDate.replace('T00:00:00','');
-                            
-                        let selectedValue = "<div id='selectedInsurancesCompanyText' class='text'><img style='width:50px ; height:30px' src='imgUrl' alt='product'>insuranceCompany</div>";
-                        selectedValue =  selectedValue.replace('imgUrl',insurance.insurance.insuranceCompany.imageSvgUrl).replace('insuranceCompany',insurance.insurance.insuranceCompany.name);
-                        document.getElementById("selectedInsurancesCompanyText").innerHTML = selectedValue;
-                        var insuranceCompanyName = document.querySelectorAll('.selectInsurance');
-                        var insuranceCompanyId = insurance.insurance.insuranceCompany.insuranceCompanyId;
 
-                        for(var i=0 ; i<insuranceCompanyName.length ; i++){
-                                insuranceCompanyName[i].classList.remove("active");
-                                insuranceCompanyName[i].classList.remove("selected");
-                            if(insuranceCompanyName[i].getAttribute('value') == insuranceCompanyId){
-                                insuranceCompanyName[i].classList.add("active");
-                                insuranceCompanyName[i].classList.add("selected");
-                            }
-                        }
-                    }
-                });
-
-            }
 
         // Example starter JavaScript for disabling form submissions if there are invalid fields
         //(function () {

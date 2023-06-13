@@ -314,7 +314,7 @@ body {
   right: -74px;
   border-radius: 4px;
   padding: 8px;
-  width: 220px;
+  width: 350px;
   z-index: 2;
   box-shadow: var(--filter-shadow);
   visibility: hidden;

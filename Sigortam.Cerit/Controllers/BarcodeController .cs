@@ -6,11 +6,22 @@ using System.DrawingCore;
 using System.Reflection.PortableExecutable;
 using IronBarCode;
 using ImageInfo = Sigortam.Cerit.Common.Dtos.Barcode.ImageInfo;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Sigortam.Cerit.Controllers
 {
     public class BarcodeController : Controller
     {
+        const string cacheKey = "file";
+        public readonly IMemoryCache _memCache;
+
+        #region ctor
+        public BarcodeController(IMemoryCache memCache)
+        {
+            _memCache = memCache;
+        }
+        #endregion
+
         [HttpGet]
         public IActionResult Reader()
         {
@@ -18,9 +29,15 @@ namespace Sigortam.Cerit.Controllers
         }
 
         [HttpPost]
-        public async void ImageReader(IFormFile file)
+        public async void Reader(IFormFile file)
         {
+            var cacheExpOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpiration = DateTime.Now.AddMinutes(30),
+                Priority = CacheItemPriority.Normal
+            };
             ImageInfo path = new ImageInfo();
+           
             try
             {
                 if (file != null)
@@ -29,9 +46,10 @@ namespace Sigortam.Cerit.Controllers
                     var resultFromFile = BarcodeReader.Read(path.FullPath);
                     var barcode = resultFromFile.FirstOrDefault()?.Text ?? string.Empty;
                     ViewBag.Barcode = barcode;
-                    string [] barcodeArray = barcode.Split('-');
+                    string[] barcodeArray = barcode.Split('-');
 
                     ViewBag.BarcodeUrl = path.FileName;
+                    _memCache.Set(cacheKey, barcodeArray, cacheExpOptions);
                 }
                 else
                 {
@@ -45,6 +63,7 @@ namespace Sigortam.Cerit.Controllers
                 ViewBag.BarcodeUrl = path.FileName;
                 //ViewBag.ImageSize=path.s
             }
+            var aaa = _memCache.Get(cacheKey);
             //return View();
         }
         private async Task<ImageInfo> ImageUploadAsync(IFormFile file)
@@ -77,6 +96,13 @@ namespace Sigortam.Cerit.Controllers
                 throw new Exception("File Copy Failed", ex);
             }
             #endregion
+        }
+        [HttpGet]
+        public ActionResult DeleteCache()
+        {
+            //Remove ile verilen key'e göre bulunan veriyi siliyoruz
+            _memCache.Remove(cacheKey);
+            return View();
         }
     }
 }

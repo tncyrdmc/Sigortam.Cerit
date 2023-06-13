@@ -44,3 +44,38 @@
         alert("Bütün alanları doldurduğunuzdan emin olun!")
     }
 }
+function GetInsuranceInformation(insuranceId) {
+    $.ajax({
+        type: "POST",
+        url: "/Insurance/GetInsuranceInformation/",
+        data: { insuranceId: insuranceId },
+        dataType: "json",
+        success: function (insurance) {
+            document.getElementById("insuranceId").value = insuranceId;
+            document.getElementById("name").value = insurance.insurance.user.name;
+            document.getElementById("lastName").value = insurance.insurance.user.lastName;
+            document.getElementById("identificationNumber").value = insurance.insurance.user.identificationNumber;
+            document.getElementById("birthDate").value = insurance.insurance.user.birthYear;
+            //document.getElementById("plateNumber").value = insurance.insurance.plateNumber;
+            document.getElementById("price").value = insurance.insurance.price;
+            document.getElementById("insuranceStartDate").value = insurance.insurance.insuranceStartDate.replace('T00:00:00', '');
+            document.getElementById("insuranceEndDate").value = insurance.insurance.insuranceEndDate.replace('T00:00:00', '');
+
+            let selectedValue = "<div id='selectedInsurancesCompanyText' class='text'><img style='width:50px ; height:30px' src='imgUrl' alt='product'>insuranceCompany</div>";
+            selectedValue = selectedValue.replace('imgUrl', insurance.insurance.insuranceCompany.imageSvgUrl).replace('insuranceCompany', insurance.insurance.insuranceCompany.name);
+            document.getElementById("selectedInsurancesCompanyText").innerHTML = selectedValue;
+            var insuranceCompanyName = document.querySelectorAll('.selectInsurance');
+            var insuranceCompanyId = insurance.insurance.insuranceCompany.insuranceCompanyId;
+
+            for (var i = 0; i < insuranceCompanyName.length; i++) {
+                insuranceCompanyName[i].classList.remove("active");
+                insuranceCompanyName[i].classList.remove("selected");
+                if (insuranceCompanyName[i].getAttribute('value') == insuranceCompanyId) {
+                    insuranceCompanyName[i].classList.add("active");
+                    insuranceCompanyName[i].classList.add("selected");
+                }
+            }
+        }
+    });
+
+}
