@@ -79,3 +79,28 @@ function GetInsuranceInformation(insuranceId) {
     });
 
 }
+function postBarcode() {
+    var form = $('#fileUploadForm')[0];
+    var data = new FormData(form);
+
+    $.ajax({
+        type: "POST",
+        enctype: 'multipart/form-data',
+        url: "/Barcode/ImageReader/",
+        data: data,
+        processData: false,
+        contentType: false,
+        cache: false,
+        timeout: 600000,
+        success: function (result) {
+            debugger;
+            document.getElementById('permitNumber').value = result.permitNumber;
+            document.getElementById('plateNumber').value = result.plateNumber;
+            document.getElementById('identificationNumber').value = result.identificationNumber;
+            alert("Success");
+        },
+        error: function (result) {
+            alert("Error");
+        }
+    });
+}

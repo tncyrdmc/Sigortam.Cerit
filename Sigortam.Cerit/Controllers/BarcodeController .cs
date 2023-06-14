@@ -24,7 +24,7 @@ namespace Sigortam.Cerit.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> Reader(IFormFile file)
+        public async Task<JsonResult> ImageReader(IFormFile file)
         {
             var cacheExpOptions = new MemoryCacheEntryOptions
             {
@@ -58,7 +58,7 @@ namespace Sigortam.Cerit.Controllers
                 ViewBag.BarcodeUrl = path.FileName;
                 //ViewBag.ImageSize=path.s
             }
-            return Json(new { IdentificationNumber = barcodeArray[2] , PlateNumber = barcodeArray[1]});
+            return Json(new { IdentificationNumber = barcodeArray[2] , PlateNumber = barcodeArray[1] , PermitNumber = barcodeArray[0]});
         }
         private async Task<ImageInfo> ImageUploadAsync(IFormFile file)
         {

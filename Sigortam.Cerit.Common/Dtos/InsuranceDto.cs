@@ -21,6 +21,7 @@ namespace Sigortam.Cerit.Common.Dtos
         public UserDto? User { get; set; }
         public VehicleDto? Vehicle { get; set; }
         public InsuranceCompanyDto? InsuranceCompany { get; set; }
+        public string PermitNumber { get; set; }
         public string SearchableText { get {return string.Join(" ",User?.FullName.ToLower() ?? string.Empty , User?.IdentificationNumber.ToString().ToLower() ?? string.Empty ,Vehicle?.PlateNumber.ToLower() ?? string.Empty)  ;} }
     }
 }
