@@ -4,8 +4,17 @@
         selectedInsuranceCompanyId = document.querySelectorAll('.selected')[0].getAttribute('value');
     }
     var status = document.getElementById("statusFilter");
-    var statusValue = status.options[status.selectedIndex].value;
-    var filterDto = { StatusType: statusValue, InsuranceCompanyId: selectedInsuranceCompanyId };
+    var selectedStatus = status.options[status.selectedIndex].value;
+    debugger;
+    let searchText = document.getElementById('search-bar').value;
+
+    var year = document.getElementById("yearFilter");
+    var selectedYear = year.options[year.selectedIndex].value;
+
+    var month = document.getElementById("monthFilter");
+    var selectedMonth = month.options[month.selectedIndex].value;
+
+    var filterDto = { StatusType: selectedStatus, InsuranceCompanyId: selectedInsuranceCompanyId, SearchText: searchText, Year: selectedYear, Month: selectedMonth, };
 
 
     $.ajax({
@@ -43,21 +52,25 @@ function resetFilter() {
     });
 }
 function filterSort(filterSortingId) {
-    var filterData = { FilterSort: document.getElementById(filterSortingId).classList[0], SearchWord: "" };
+    debugger;
+    var filterData = { FilterSort: filterSortingId, SearchWord: "" };
     $.ajax({
         type: "POST",
         url: "/Insurance/FilterSorting/",
         data: filterData,
         //dataType: "json",
-        success: async function (result) {
-            if (result.includes('Desc')) {
-                document.getElementById(result.replace('Desc', '')).classList.remove(result);
-                document.getElementById(result.replace('Desc', '')).classList.add(result.replace('Desc', ''));
-            }
-            else {
-                document.getElementById(result).classList.remove(result);
-                document.getElementById(result).classList.add(result + "Desc");
-            }
+        success: async function (response) {
+            //debugger;
+            //var result = response.sortDescription ;
+            //if (result.includes('Desc')) {
+            //    document.getElementById(result.replace('Desc', '')).classList.remove(result);
+            //    document.getElementById(result.replace('Desc', '')).classList.add(result.replace('Desc', ''));
+            //}
+            //else {
+            //    document.getElementById(result).classList.remove(result);
+            //    document.getElementById(result).classList.add(result + "Desc");
+            //}
+            window.location.href = response.redirectToUrl;
         }
     });
 }

@@ -11,19 +11,21 @@ namespace Sigortam.Cerit.Controllers
 {
     public class InsuranceController : Controller
     {
+        #region cash
         private IInsurance _servis;
         private readonly IMemoryCache _memCache;
         const string _insuranceKey = "insuranceList";
         const string _filterKey = "filter";
-        const string _searchFilterKey = "searchFilterKey";
+        #endregion
 
-
+        #region ctor
         public InsuranceController(IInsurance servis, IMemoryCache memCache)
         {
             _servis = servis;
             _memCache = memCache;
 
         }
+        #endregion
 
         public IActionResult Index()
         {
@@ -35,7 +37,7 @@ namespace Sigortam.Cerit.Controllers
             }
             else
             {
-                insurances = _servis.GetInsurances();
+                insurances = GetInsurances();
             }
             if (_memCache.TryGetValue(_filterKey, out FilterDto filter))
             {
@@ -55,13 +57,14 @@ namespace Sigortam.Cerit.Controllers
                 AbsoluteExpiration = DateTime.Now.AddMinutes(30),
                 Priority = CacheItemPriority.Normal
             };
-            if (_memCache.TryGetValue(_insuranceKey, out List<InsuranceDto> insuranceMemoryList) && !filterDto.IsResetCasheFilter && insuranceMemoryList.Count > 0)
+            if (_memCache.TryGetValue(_insuranceKey, out List<InsuranceDto> insuranceMemoryList) && !filterDto.IsResetCasheFilter && insuranceMemoryList.Count > 0
+                && (!(_memCache.TryGetValue(_filterKey, out FilterDto filterCash)) || filterCash.SearchText == filterDto.SearchText))
             {
                 insurances = insuranceMemoryList.ToList();
             }
             else
             {
-                insurances = _servis.GetInsurances();
+                insurances = GetInsurances();
             }
 
             if (filterDto.StatusType != StatusType.All)
@@ -92,7 +95,7 @@ namespace Sigortam.Cerit.Controllers
             }
             else
             {
-                insurances = _servis.GetInsurances();
+                insurances = GetInsurances();
             }
 
             using (var workbook = new XLWorkbook())
@@ -113,7 +116,12 @@ namespace Sigortam.Cerit.Controllers
                 workSheet.Cell(1, 5).Style.Fill.BackgroundColor = XLColor.LightBlue;
                 workSheet.Cell(1, 6).Style.Fill.BackgroundColor = XLColor.LightBlue;
                 workSheet.Cell(1, 7).Style.Fill.BackgroundColor = XLColor.LightBlue;
-
+                //var address1 = workSheet.Cell(1, 1).Address;
+                //var address2 = workSheet.Cell(1, 7).Address;
+                //IXLRangeAddress rangeAddress = (IXLRangeAddress)workSheet.Range(address1, address2);
+                //workSheet.AutoFilter.Range = new IXLRange("A1:G1");
+                //var allDataRange = workSheet.RangeUsed();
+                //allDataRange.Sort(7,XLSortOrder.Descending);
                 var insurancesCount = 2;
 
                 foreach (var insurance in insurances)
@@ -138,69 +146,91 @@ namespace Sigortam.Cerit.Controllers
         [HttpPost]
         public JsonResult FilterSorting(FilterDto filterData)
         {
-            //Servisten çekmek yerine dataları sayfadan güncel halini almak gerekiyor search için sıkıntılı durumlar yaşanmasın.
-            var insurances = _servis.GetInsurances();
-            if (filterData.FilterSort == "userFullName")
+            var cacheExpOptions = new MemoryCacheEntryOptions
             {
-                var insurancesfilter = insurances.OrderByDescending(x => x.User.FullName);
-                return Json("userFullName");
-            }
-            else if (filterData.FilterSort == "userFullNameDesc")
+                AbsoluteExpiration = DateTime.Now.AddMinutes(30),
+                Priority = CacheItemPriority.Normal
+            };
+
+            string filterSort = filterData.FilterSort;
+            var filter = (FilterDto)_memCache.Get(_filterKey);
+
+            if (filter != null && filter.FilterSort == filterData.FilterSort)
             {
-                var insurancesfilter = insurances.OrderBy(x => x.User.FullName);
-                return Json("userFullNameDesc");
+                if (filterData.FilterSort.Contains("Desc"))
+                {
+                    filterData.FilterSort = filterData.FilterSort.Replace("Desc", "");
+                }
+                else
+                {
+                    filterData.FilterSort = filterData.FilterSort + "Desc";
+                }
             }
-            else if (filterData.FilterSort == "startDate")
+
+            var insurances = new List<InsuranceDto>();
+            if (_memCache.TryGetValue(_insuranceKey, out List<InsuranceDto> insuranceMemoryList))
             {
-                var insurancesfilter = insurances.OrderByDescending(x => x.InsuranceStartDate);
-                return Json("startDate");
+                insurances = insuranceMemoryList.ToList();
             }
-            else if (filterData.FilterSort == "startDateDesc")
+            else
             {
-                var insurancesfilter = insurances.OrderBy(x => x.InsuranceStartDate);
-                return Json("startDateDesc");
+                insurances = GetInsurances();
             }
-            else if (filterData.FilterSort == "endDate")
+            #region OrderSC
+            switch (filterData.FilterSort)
             {
-                var insurancesfilter = insurances.OrderByDescending(x => x.InsuranceEndDate);
-                return Json("endDate");
+                case "userFullName":
+                    insurances = insurances.OrderByDescending(x => x.User.FullName).ToList();
+                    break;
+                case "userFullNameDesc":
+                    insurances = insurances.OrderBy(x => x.User.FullName).ToList();
+                    break;
+                case "startDate":
+                    insurances = insurances.OrderByDescending(x => x.InsuranceStartDate).ToList();
+                    break;
+                case "startDateDesc":
+                    insurances = insurances.OrderBy(x => x.InsuranceStartDate).ToList();
+                    break;
+                case "endDate":
+                    insurances = insurances.OrderByDescending(x => x.InsuranceEndDate).ToList();
+                    break;
+                case "endDateDesc":
+                    insurances = insurances.OrderBy(x => x.InsuranceEndDate).ToList();
+                    break;
+                case "price":
+                    insurances = insurances.OrderByDescending(x => x.Price).ToList();
+                    break;
+                case "priceDesc":
+                    insurances = insurances.OrderBy(x => x.Price).ToList();
+                    break;
+                case "remainingTime":
+                    insurances = insurances.OrderByDescending(x => x.RemainingTime).ToList();
+                    break;
+                case "remainingTimeDesc":
+                    insurances = insurances.OrderBy(x => x.RemainingTime).ToList();
+                    break;
+                case "isActive":
+                    insurances = insurances.OrderByDescending(x => x.IsActive).ToList();
+                    break;
+                case "isActiveDesc":
+                    insurances = insurances.OrderBy(x => x.IsActive).ToList();
+                    break;
+                default:
+                    break;
             }
-            else if (filterData.FilterSort == "endDateDesc")
+            #endregion
+
+            if (filter != null)
             {
-                var insurancesfilter = insurances.OrderBy(x => x.InsuranceEndDate);
-                return Json("endDateDesc");
+                filter.FilterSort = filterData.FilterSort;
+                _memCache.Set(_filterKey, filter, cacheExpOptions);
             }
-            else if (filterData.FilterSort == "price")
+            else
             {
-                var insurancesfilter = insurances.OrderByDescending(x => x.Price);
-                return Json("price");
+                _memCache.Set(_filterKey, filterData, cacheExpOptions);
             }
-            else if (filterData.FilterSort == "priceDesc")
-            {
-                var insurancesfilter = insurances.OrderBy(x => x.Price);
-                return Json("priceDesc");
-            }
-            else if (filterData.FilterSort == "remainingTime")
-            {
-                var insurancesfilter = insurances.OrderByDescending(x => x.RemainingTime);
-                return Json("remainingTime");
-            }
-            else if (filterData.FilterSort == "remainingTimeDesc")
-            {
-                var insurancesfilter = insurances.OrderBy(x => x.RemainingTime);
-                return Json("remainingTimeDesc");
-            }
-            else if (filterData.FilterSort == "isActive")
-            {
-                var insurancesfilter = insurances.OrderByDescending(x => x.IsActive);
-                return Json("isActive");
-            }
-            else if (filterData.FilterSort == "isActiveDesc")
-            {
-                var insurancesfilter = insurances.OrderBy(x => x.IsActive);
-                return Json("isActiveDesc");
-            }
-            return Json(true);
+            _memCache.Set(_insuranceKey, insurances, cacheExpOptions);
+            return Json(new { redirectToUrl = Url.Action("Index", "Insurance")});
         }
         public JsonResult GetInsuranceInformation(int insuranceId)
         {

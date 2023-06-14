@@ -1,9 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Sigortam.Cerit.Common.Dtos.Barcode;
-using System.DrawingCore;
-//using ZXing;
-//using ZXing.ZKWeb;
-using System.Reflection.PortableExecutable;
 using IronBarCode;
 using ImageInfo = Sigortam.Cerit.Common.Dtos.Barcode.ImageInfo;
 using Microsoft.Extensions.Caching.Memory;
@@ -29,7 +24,7 @@ namespace Sigortam.Cerit.Controllers
         }
 
         [HttpPost]
-        public async void Reader(IFormFile file)
+        public async Task<JsonResult> Reader(IFormFile file)
         {
             var cacheExpOptions = new MemoryCacheEntryOptions
             {
@@ -37,7 +32,7 @@ namespace Sigortam.Cerit.Controllers
                 Priority = CacheItemPriority.Normal
             };
             ImageInfo path = new ImageInfo();
-           
+            string[] barcodeArray = new string[3];
             try
             {
                 if (file != null)
@@ -46,7 +41,7 @@ namespace Sigortam.Cerit.Controllers
                     var resultFromFile = BarcodeReader.Read(path.FullPath);
                     var barcode = resultFromFile.FirstOrDefault()?.Text ?? string.Empty;
                     ViewBag.Barcode = barcode;
-                    string[] barcodeArray = barcode.Split('-');
+                    barcodeArray = barcode.Split('-');
 
                     ViewBag.BarcodeUrl = path.FileName;
                     _memCache.Set(cacheKey, barcodeArray, cacheExpOptions);
@@ -63,8 +58,7 @@ namespace Sigortam.Cerit.Controllers
                 ViewBag.BarcodeUrl = path.FileName;
                 //ViewBag.ImageSize=path.s
             }
-            var aaa = _memCache.Get(cacheKey);
-            //return View();
+            return Json(new { IdentificationNumber = barcodeArray[2] , PlateNumber = barcodeArray[1]});
         }
         private async Task<ImageInfo> ImageUploadAsync(IFormFile file)
         {

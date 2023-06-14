@@ -13,6 +13,8 @@ namespace Sigortam.Cerit.Common.Dtos.Filter
         public StatusType StatusType { get; set; }
         public string FilterSort { get; set; }
         public bool IsResetCasheFilter { get; set; }
+        public int Year { get; set; }
+        public int Month { get; set; }
     }
     public enum StatusType
     {
