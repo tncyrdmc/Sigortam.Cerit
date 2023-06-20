@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sigortam.Cerit.Data;
 
@@ -11,9 +12,11 @@ using Sigortam.Cerit.Data;
 namespace Sigortam.Cerit.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230620133618_SaveChangeASync")]
+    partial class SaveChangeASync
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +33,7 @@ namespace Sigortam.Cerit.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InsuranceId"));
 
-                    b.Property<DateTime>("CreatedOn")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("InsuranceCompanyId")
@@ -45,7 +48,7 @@ namespace Sigortam.Cerit.Data.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("UpdatedOn")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("UserId")
@@ -103,7 +106,7 @@ namespace Sigortam.Cerit.Data.Migrations
                     b.Property<int>("BirthYear")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedOn")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<double>("IdentificationNumber")
@@ -126,7 +129,7 @@ namespace Sigortam.Cerit.Data.Migrations
                     b.Property<double>("PhoneNumber")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("UpdatedOn")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("UserId");
@@ -146,7 +149,7 @@ namespace Sigortam.Cerit.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedOn")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Model")
@@ -157,7 +160,7 @@ namespace Sigortam.Cerit.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdatedOn")
+                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("VehicleYear")

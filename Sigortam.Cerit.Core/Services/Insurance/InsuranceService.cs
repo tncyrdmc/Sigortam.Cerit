@@ -41,6 +41,7 @@ namespace Sigortam.Cerit.Core.Services.Insurance
                     LastName = insuranceDto.User.LastName,
                     Name = insuranceDto.User.Name,
                     PhoneNumber = insuranceDto.User.PhoneNumber,
+                    
                 };
                 _context.User.Add(user);
             }

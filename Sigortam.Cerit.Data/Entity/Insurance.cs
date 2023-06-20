@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Sigortam.Cerit.Data.Entity
 {
-    public class Insurance
+    public class Insurance:BaseEntity
     {
         [Key]
         public int InsuranceId { get; set; }
