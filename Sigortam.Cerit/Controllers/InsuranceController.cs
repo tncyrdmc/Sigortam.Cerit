@@ -50,6 +50,7 @@ namespace Sigortam.Cerit.Controllers
         }
         public IActionResult FilterInsurance(FilterDto filterDto)
         {
+            filterDto = (filterDto == null ? new FilterDto { IsResetCasheFilter = true } : filterDto);
             var insurances = new List<InsuranceDto>();
 
             var cacheExpOptions = new MemoryCacheEntryOptions
@@ -58,7 +59,8 @@ namespace Sigortam.Cerit.Controllers
                 Priority = CacheItemPriority.Normal
             };
             if (_memCache.TryGetValue(_insuranceKey, out List<InsuranceDto> insuranceMemoryList) && !filterDto.IsResetCasheFilter && insuranceMemoryList.Count > 0
-                && (!(_memCache.TryGetValue(_filterKey, out FilterDto filterCash)) || filterCash.SearchText == filterDto.SearchText))
+                && (!(_memCache.TryGetValue(_filterKey, out FilterDto filterCash)) || filterCash.SearchText == filterDto.SearchText)
+                && filterCash.Year == filterDto.Year && filterCash.Month == filterDto.Month)
             {
                 insurances = insuranceMemoryList.ToList();
             }
@@ -66,6 +68,10 @@ namespace Sigortam.Cerit.Controllers
             {
                 insurances = GetInsurances();
             }
+            filterDto.Year = filterDto.Year == default ? DateTime.Now.Year : filterDto.Year;
+            filterDto.Month = filterDto.Month == default ? DateTime.Now.Month : filterDto.Month;
+
+            insurances = insurances.Where(x => x.InsuranceStartDate.Year == filterDto.Year && x.InsuranceStartDate.Month == filterDto.Month).ToList();
 
             if (filterDto.StatusType != StatusType.All)
             {
@@ -101,28 +107,27 @@ namespace Sigortam.Cerit.Controllers
             using (var workbook = new XLWorkbook())
             {
                 var workSheet = workbook.Worksheets.Add("Sigortalarım");
-                workSheet.Cell(1, 1).Value = "Şirket";
-                workSheet.Cell(1, 2).Value = "Kullanıcı";
-                workSheet.Cell(1, 3).Value = "Başlangıç Tarihi";
-                workSheet.Cell(1, 4).Value = "Bitiş Tarihi";
-                workSheet.Cell(1, 5).Value = "Ücret";
-                workSheet.Cell(1, 6).Value = "Kalan Gün";
-                workSheet.Cell(1, 7).Value = "Durum";
+                workSheet.Cells("A1:G1,A1:A1").Style.Fill.BackgroundColor = XLColor.Yellow;
+                workSheet.Cells("A3:G3,A3:A3").Style.Fill.BackgroundColor = XLColor.DarkBlue;
+                workSheet.Cells("A3:G3,A3:A3").Style.Font.FontColor = XLColor.White;
+                workSheet.Cell(1, 5).Value = "Genel Toplam";
+                #region Header
+                workSheet.Cell(3, 1).Value = "Şirket";
+                workSheet.Cell(3, 2).Value = "Kullanıcı";
+                workSheet.Cell(3, 3).Value = "Başlangıç Tarihi";
+                workSheet.Cell(3, 4).Value = "Bitiş Tarihi";
+                workSheet.Cell(3, 5).Value = "Ücret";
+                workSheet.Cell(3, 6).Value = "Kalan Gün";
+                workSheet.Cell(3, 7).Value = "Durum";
+                var filterCells = workSheet.Cells("A3:G3,A3:A3");
+                foreach (var filterCell in filterCells)
+                {
+                    filterCell.AsRange().SetAutoFilter(true);
+                }
+                #endregion
 
-                workSheet.Cell(1, 1).Style.Fill.BackgroundColor = XLColor.LightBlue;
-                workSheet.Cell(1, 2).Style.Fill.BackgroundColor = XLColor.LightBlue;
-                workSheet.Cell(1, 3).Style.Fill.BackgroundColor = XLColor.LightBlue;
-                workSheet.Cell(1, 4).Style.Fill.BackgroundColor = XLColor.LightBlue;
-                workSheet.Cell(1, 5).Style.Fill.BackgroundColor = XLColor.LightBlue;
-                workSheet.Cell(1, 6).Style.Fill.BackgroundColor = XLColor.LightBlue;
-                workSheet.Cell(1, 7).Style.Fill.BackgroundColor = XLColor.LightBlue;
-                //var address1 = workSheet.Cell(1, 1).Address;
-                //var address2 = workSheet.Cell(1, 7).Address;
-                //IXLRangeAddress rangeAddress = (IXLRangeAddress)workSheet.Range(address1, address2);
-                //workSheet.AutoFilter.Range = new IXLRange("A1:G1");
-                //var allDataRange = workSheet.RangeUsed();
-                //allDataRange.Sort(7,XLSortOrder.Descending);
-                var insurancesCount = 2;
+                #region Data
+                var insurancesCount = 4;
 
                 foreach (var insurance in insurances)
                 {
@@ -135,6 +140,9 @@ namespace Sigortam.Cerit.Controllers
                     workSheet.Cell(insurancesCount, 7).Value = insurance.IsActive ? "Aktif" : "Pasif";
                     insurancesCount++;
                 }
+                workSheet.Cell(2, 5).Value = insurances.Sum(x => x.Price).ToString();
+                #endregion
+
                 using (var stream = new MemoryStream())
                 {
                     workbook.SaveAs(stream);
@@ -230,7 +238,7 @@ namespace Sigortam.Cerit.Controllers
                 _memCache.Set(_filterKey, filterData, cacheExpOptions);
             }
             _memCache.Set(_insuranceKey, insurances, cacheExpOptions);
-            return Json(new { redirectToUrl = Url.Action("Index", "Insurance")});
+            return Json(new { redirectToUrl = Url.Action("Index", "Insurance") });
         }
         public JsonResult GetInsuranceInformation(int insuranceId)
         {
@@ -245,6 +253,13 @@ namespace Sigortam.Cerit.Controllers
         {
             _servis.AddOrUpdateInsurance(userIdentityCheckDto);
             return Json(new { Message = "Başarılı bir şekilde kayıt oluşturuldu", Code = ResultType.Succeeded });
+        }
+        public JsonResult RemoveCash()
+        {
+            _memCache.Remove(_filterKey);
+            _memCache.Remove(_insuranceKey);
+            FilterInsurance(new FilterDto { IsResetCasheFilter = true});
+            return Json(new { redirectToUrl = Url.Action("Index", "Insurance") });
         }
     }
 }

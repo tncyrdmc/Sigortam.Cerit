@@ -39,14 +39,13 @@ function filtertSearch() {
             }
         });
 }
-function resetFilter() {
-    var filterDto = { IsResetCasheFilter: true };
-    document.getElementById('resetFilter').value = "";
+function removeCash() {
+    debugger;
     $.ajax({
         type: "POST",
-        url: "/Insurance/FilterInsurance/",
-        data: filterDto,
+        url: "/Insurance/RemoveCash/",
         success: function (response) {
+            alert("Filtreler başarılı bir şekilde temizlendi")
             window.location.href = response.redirectToUrl;
         }
     });

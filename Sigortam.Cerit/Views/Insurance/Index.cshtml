@@ -10,6 +10,7 @@
     var insurancesCompanys = (List<InsuranceCompanyDto>)ViewBag.InsuranceCompany;
     var filter = (FilterDto)ViewBag.Filter;
     var searchText = filter?.SearchText ?? string.Empty;
+    var NowYear = DateTime.Now.Year;
 }
 
 <h1 class="app-content-headerText ">&nbsp;&nbsp;Tüm sigortaları görüntüle</h1>
@@ -104,12 +105,12 @@
                                             Lütfen ruhsat numarası kısmını doldurun.
                                         </div>
                                     </div>
-@*                                    <div class="col">
+                                    @*                                    <div class="col">
                                         <input type="text" id="price" class="form-control rounded-right needs-validation-text" placeholder="Ücret" required />
                                         <div class="invalid-feedback">
-                                            Lütfen ücret kısmını doldurun.
+                                        Lütfen ücret kısmını doldurun.
                                         </div>
-                                    </div>*@
+                                        </div>*@
                                 </div>
                                 <div class="form-group d-flex row">
                                     <div class="col">
@@ -141,7 +142,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <button type="submit" class="btn btn-primary container" onclick="identityCheck()">Kayıt Et</button>
+                                    <button type="submit" class="btn btn-primary container" onclick="addOrUpdateInsurance()">Kayıt Et</button>
                                 </div>
                             </form>
                             <div class="col-md-4">
@@ -201,11 +202,18 @@
                         <div class="filter-menu">
                             <label>Yıl</label>
                             <select id="yearFilter">
-                                <option value="@(DateTime.Now.Year -2)">@(DateTime.Now.Year -2)</option>
-                                <option value="@(DateTime.Now.Year -1)">@(DateTime.Now.Year -1)</option>
-                                <option value="@DateTime.Now.Year" selected="selected">@(DateTime.Now.Year)</option>
-                                <option value="@(DateTime.Now.Year +1)">@(DateTime.Now.Year +1)</option>
-                                <option value="@(DateTime.Now.Year +2)">@(DateTime.Now.Year +2)</option>
+                                @for (int i = -2; i <= 2; i++)
+                                {
+                                    if ((filter != null && filter.Year != default && filter.Year == NowYear + i) || (filter == null && i == 0))
+                                    {
+                                        <option value="@(NowYear + i)" selected="selected">@(NowYear + i)</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@(NowYear + i)">@(@NowYear + i)</option>
+                                    }
+                                }
+
                             </select>
                             <label>Ay</label>
                             <select id="monthFilter">
@@ -213,7 +221,7 @@
                                 {
                                     string month = CultureInfo.GetCultureInfo(("tr-TR")).DateTimeFormat.MonthNames[@monthCount];
                                     var orginalMonth = monthCount + 1;
-                                    if (DateTime.Now.Month - 1 == monthCount)
+                                    if ((filter != null && filter.Month != default && filter.Month == orginalMonth) || (filter == null && DateTime.Now.Month == orginalMonth))
                                     {
                                         <option value="@orginalMonth" selected="selected">@month</option>
                                     }
@@ -244,7 +252,7 @@
                                 <option value="Disable">Pasif</option>
                             </select>
                             <div class="filter-menu-buttons">
-                                <button class="filter-button reset" id="resetFilter" onclick="resetFilter()">
+                                <button class="filter-button reset" id="resetFilter" onclick="removeCash()">
                                     Filtreti Sıfırla
                                 </button>
                                 <button class="filter-button apply" onclick="addFilter()">

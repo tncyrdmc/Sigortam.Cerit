@@ -32,7 +32,8 @@
             success:  function (result) {
                 if (result.code == 101) {
                     alert(result.message);
-                    location.href = "/Insurance/Index";
+                    addFilter();
+                    //location.href = "/Insurance/Index";
                 }
                 else {
                     alert(result.message)
@@ -97,7 +98,7 @@ function postBarcode() {
             document.getElementById('permitNumber').value = result.permitNumber;
             document.getElementById('plateNumber').value = result.plateNumber;
             document.getElementById('identificationNumber').value = result.identificationNumber;
-            alert("Success");
+            alert("Gerekli alanlar başarılı bir şekilde dolduruldu.");
         },
         error: function (result) {
             alert("Error");
