@@ -43,7 +43,6 @@ namespace Sigortam.Cerit.Controllers
             {
                 ViewBag.Filter = filter;
             }
-
             ViewBag.InsuranceActiveCompany = _servis.GetInsuranceCompanys().Where(x => x.IsActive).ToList();
             ViewBag.InsuranceCompany = _servis.GetInsuranceCompanys().ToList();
             return View(insurances);

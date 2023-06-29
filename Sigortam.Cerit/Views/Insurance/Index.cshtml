@@ -36,9 +36,9 @@
         <div class="app-content">
             <div class="app-content-header">
                 <!-- Button trigger modal -->
-                <button class="app-content-headerButton" onclick="DownloadExcelInsurance()">Excel Export</button>
+                @*<button class="app-content-headerButton" onclick="DownloadExcelInsurance()">Excel Export</button>*@
                 <input id="insuranceId" value="0" style="visibility:hidden" />
-                <button class="app-content-headerButton" data-toggle="modal" data-target="#exampleModalCenter">Yeni Sigorta Kaydı Ekle</button>
+                @*<button class="app-content-headerButton" data-toggle="modal" data-target="#exampleModalCenter">Yeni Sigorta Kaydı Ekle</button>*@
                 @*<button class="app-content-headerButton" data-toggle="modal" data-target="#exampleModalCenter2">Barcode Ekle</button>*@
 
                 <!-- Modal -->
@@ -197,6 +197,10 @@
             <div class="app-content-actions">
                 <input class="search-bar" id="search-bar" placeholder="Search..." type="text" value="@searchText" onchange="filtertSearch()">
                 <div class="app-content-actions-wrapper">
+                        <button  class="action-button" onclick="DownloadExcelInsurance()"><img src="~/img/excel (1).png" style="width:35px"></button>
+                        <div style=margin:12px></div>
+                        @*<button class="action-button" data-toggle="modal" data-target="#exampleModalCenter"><img src="~/img/health.png" style="width:35px"></button>*@
+                    <button class="app-content-headerButton" data-toggle="modal" data-target="#exampleModalCenter"><img src="~/img/car-insurance.png" style="width:35px">&nbsp&nbsp&nbsp&nbsp Yeni Sigorta Kaydı Ekle</button>
                     <div class="filter-button-wrapper">
                         <button class="action-button filter jsFilter"><span>Filtre</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" /></svg></button>
                         <div class="filter-menu">
@@ -268,6 +272,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /></svg>
                     </button>
                 </div>
+
             </div>
             <div class="products-area-wrapper tableView">
                 <div class="products-header ">
