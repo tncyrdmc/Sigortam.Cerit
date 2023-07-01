@@ -2,9 +2,11 @@
 using IronBarCode;
 using ImageInfo = Sigortam.Cerit.Common.Dtos.Barcode.ImageInfo;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Sigortam.Cerit.Controllers
 {
+    [Authorize]
     public class BarcodeController : Controller
     {
         const string cacheKey = "file";

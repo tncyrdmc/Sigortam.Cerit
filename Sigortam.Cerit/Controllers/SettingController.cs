@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Sigortam.Cerit.Common.Dtos.Setting;
 
 namespace Sigortam.Cerit.Controllers
 {
+    [Authorize]
     public class SettingController : Controller
     {
         public IActionResult Index()

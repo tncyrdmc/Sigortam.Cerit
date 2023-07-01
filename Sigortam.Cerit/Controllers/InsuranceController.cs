@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Sigortam.Cerit.Common.Dtos;
@@ -9,6 +10,7 @@ using System.Globalization;
 
 namespace Sigortam.Cerit.Controllers
 {
+    [Authorize]
     public class InsuranceController : Controller
     {
         #region cash

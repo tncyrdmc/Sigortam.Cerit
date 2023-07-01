@@ -1,4 +1,8 @@
-﻿@using Sigortam.Cerit.Common
+﻿@using Microsoft.AspNetCore.Identity
+@using Sigortam.Cerit.Common
+@using Sigortam.Cerit.Data.Entity
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
 @*@{var webSiteName = GlobalConstruction.WebSiteName;}*@
 
 <!DOCTYPE html>
@@ -123,16 +127,16 @@
                     <span class="link_name">Setting</span>
                 </a>
                 <ul class="sub-menu blank">
-                     <li><a class="link_name" asp-controller="Setting" asp-action="Index">Setting</a></li>
+                    <li><a class="link_name" asp-controller="Setting" asp-action="Index">Setting</a></li>
                 </ul>
             </li>
             <li>
                 <div class="profile-details">
                     <div class="profile-content">
-                        <img src="image/profile.jpg" alt="profileImg">
+                        <img src="~/img/profile.png" alt="profileImg">
                     </div>
                     <div class="name-job">
-                        <div class="profile_name">Prem Shahi</div>
+                        <div class="profile_name">Mustafa ÖZCERİT</div>
                         <div class="job">Web Desginer</div>
                     </div>
                     <i class='bx bx-log-out'></i>
@@ -140,15 +144,38 @@
             </li>
         </ul>
     </div>
-    <div class="body-container" style="height:105% ; width:96% ;margin-top:3%;">
+    <div class="body-container" style="height:105% ; width:96% ;margin-top:3%; margin-left:5%">
         @*<main role="main" class="pb-3">*@
-            <button class="mode-switch" title="Switch Theme"style="color:red">
-                <svg class="moon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="24" height="24" viewBox="0 0 24 24">
-                    <defs></defs>
-                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
-                </svg>
-            </button>
-                @RenderBody()
+        <div class="app-content-actions">
+            <div class="app-content-actions-wrapper">
+                <div>
+                    <button class="mode-switch" title="Mod değiştir" style="color:red">
+                        <svg class="moon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="24" height="24" viewBox="0 0 24 24">
+                            <defs></defs>
+                            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div style="margin:6px"></div>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <div class="">
+                        <a asp-controller="Login" asp-action="Logout" title="Kullanıcı çıkışı" style="color:red">
+                            <img src="~/img/logout.png" />
+                        </a>
+                    </div>
+                    <div style="margin:6px"></div>
+                    <div class="">
+                        <p class="app-content-headerText" style="font-size:15px">
+                            @UserManager.GetUserName(User)
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+
+
+        @RenderBody()
         @*</main>*@
     </div>
     <section class="home-section">
@@ -173,11 +200,11 @@
         });
     </script>
 
-@*    <footer class="border-top footer text-muted"> 
+    @*    <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - @webSiteName uygulaması(Mustafa - Aycan ÖZCERİT) - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        &copy; 2023 - @webSiteName uygulaması(Mustafa - Aycan ÖZCERİT) - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
-    </footer>*@
+        </footer>*@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

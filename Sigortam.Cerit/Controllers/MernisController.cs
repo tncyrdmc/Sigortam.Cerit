@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Sigortam.Cerit.Common.Dtos;
 using Sigortam.Cerit.Core.Interfaces;
 using Sigortam.Cerit.Core.Services.Insurance;
@@ -6,6 +7,7 @@ using Sigortam.Cerit.Models;
 
 namespace Sigortam.Cerit.Controllers
 {
+    [Authorize]
     public class MernisController : Controller
     {
         public IInsurance _servis;

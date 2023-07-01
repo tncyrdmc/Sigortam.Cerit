@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Sigortam.Cerit.Common.Dtos;
 using Sigortam.Cerit.Core.Interfaces;
 
 namespace Sigortam.Cerit.Controllers
 {
+    [Authorize]
     public class InsuranceCompanyController : Controller
     {
         public IInsurance _servis;
