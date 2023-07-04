@@ -33,14 +33,14 @@ namespace Sigortam.Cerit.Controllers
             //var passCheck = new PasswordHasher<object>().VerifyHashedPassword(null, user.PasswordHash, "2183579Mus*");
 
 
-            if (user != null && user.AgreementEndDate > DateTime.Now)
-            {
+            //if (user != null && user.AgreementEndDate > DateTime.Now)
+            //{
                 var result = await _signInManager.PasswordSignInAsync(loginDto.UserName, loginDto.Password, false, true);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Insurance");
                 }
-            }
+            //}
 
             return View();
         }

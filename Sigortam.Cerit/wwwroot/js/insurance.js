@@ -13,7 +13,8 @@
     }
     var insuranceCompany = document.querySelectorAll('.selected')[0];
     var InsuranceCompanyDto = { Name: insuranceCompany.textContent, InsuranceCompanyId: insuranceCompany.getAttribute('value') };
-
+    debugger;
+    var VehicleDto = { PlateNumber: document.getElementById("plateNumber").value };
     if (validate === 0) {
         var user = {
             Name: document.getElementById("name").value, LastName: document.getElementById("lastName").value, IdentificationNumber: document.getElementById("identificationNumber").value,
@@ -22,7 +23,10 @@
 
         var userIdentityCheckDto = {
             InsuranceStartDate: document.getElementById("insuranceStartDate").value, InsuranceEndDate: document.getElementById("insuranceEndDate").value, PlateNumber: document.getElementById("plateNumber").value,
-            User: user, InsuranceCompany: InsuranceCompanyDto, InsuranceId: document.getElementById("insuranceId").value, Price: document.getElementById("price").value
+            User: user,
+            InsuranceCompany: InsuranceCompanyDto,
+            Vehic: VehicleDto,
+            InsuranceId: document.getElementById("insuranceId").value, Price: document.getElementById("price").value
         };
 
         $.ajax({

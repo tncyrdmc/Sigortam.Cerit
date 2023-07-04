@@ -20,6 +20,7 @@ namespace Sigortam.Cerit.Data
         public DbSet<Insurance> Insurance { get; set; }
         public DbSet<InsuranceCompany> InsuranceCompany { get; set; }
         public DbSet<Vehicle> Vehicle { get; set; }
+        public DbSet<Setting> Setting { get; set; }
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
             OnBeforeSaving();

@@ -46,21 +46,21 @@ namespace Sigortam.Cerit.Core.Services.Insurance
                 _context.User.Add(user);
             }
 
-            //if (insuranceDto.Vehicle.VehicleId != default)
-            //{
-            //    vehicle = _context.Vehicle.FirstOrDefault(x => x.VehicleId == insuranceDto.Vehicle.VehicleId);
-            //}
-            //else
-            //{
-            //    vehicle = new Vehicle
-            //    {
-            //        Brand = insuranceDto.Vehicle.Brand,
-            //        Model = insuranceDto.Vehicle.Model,
-            //        PlateNumber = insuranceDto.Vehicle.PlateNumber,
-            //        VehicleYear = insuranceDto.Vehicle.VehicleYear,
-            //    };
-            //    _context.Vehicle.Add(vehicle);
-            //}
+            if (insuranceDto.Vehicle.VehicleId != default)
+            {
+                vehicle = _context.Vehicle.FirstOrDefault(x => x.VehicleId == insuranceDto.Vehicle.VehicleId);
+            }
+            else
+            {
+                vehicle = new Vehicle
+                {
+                    Brand = insuranceDto.Vehicle.Brand,
+                    Model = insuranceDto.Vehicle.Model,
+                    PlateNumber = insuranceDto.Vehicle.PlateNumber,
+                    VehicleYear = insuranceDto.Vehicle.VehicleYear,
+                };
+                _context.Vehicle.Add(vehicle);
+            }
 
             var insurance = new Sigortam.Cerit.Data.Entity.Insurance
             {

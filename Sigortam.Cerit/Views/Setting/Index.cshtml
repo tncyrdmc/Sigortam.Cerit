@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Kullanıcı Ayaları";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var count = 1;
 }
 
 <h1 class="app-content-headerText ">&nbsp;&nbsp;Kullanıcı Ayaları</h1>
@@ -34,11 +33,11 @@
                     <th scope="col">#</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr style="color:white ; width:20px;">
+            <tbody style="color:white ; width:20px;">
+                <tr >
                     @*                       <th scope="row">@count</th>
                         <td> <img src="@Model.ImageSvgUrl" width="100" height="35" alt="product"></td>*@
-                    <td>@count</td>
+                    <td>1</td>
                     <td>Yıl, ay , gün cinsen göster</td>
                     @if (Model.RemainingTimeType == Sigortam.Cerit.Common.Dtos.Setting.RemainingTime.YearMonthDay)
                     {
@@ -52,11 +51,17 @@
                     }
                 </tr>
                 <tr>
+                <td>2</td>
+                 <td>Sigorta süreleri yaklaşanlarını kaç gün önceden getirsin</td>
+                 <td></td>
+                    <td>
+                        <input id="expiredInsurancesDay" value="@Model.ExpiredInsurancesDay" />
+                    </td>
+                </tr>
             </tbody>
-            count++;
         </table>
     </div>
-    <div style="text-align:right">
+    <div style="text-align:right ; margin-right:2%">
         <button class="app-content-headerButton" onclick="saveFunction()">Kaydet</button>
     </div>
 </body>

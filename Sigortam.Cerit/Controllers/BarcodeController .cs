@@ -42,11 +42,11 @@ namespace Sigortam.Cerit.Controllers
                     path = await ImageUploadAsync(file);
                     var resultFromFile = BarcodeReader.Read(path.FullPath);
                     var barcode = resultFromFile.FirstOrDefault()?.Text ?? string.Empty;
-                    ViewBag.Barcode = barcode;
+                    //ViewBag.Barcode = barcode;
                     barcodeArray = barcode.Split('-');
 
-                    ViewBag.BarcodeUrl = path.FileName;
-                    _memCache.Set(cacheKey, barcodeArray, cacheExpOptions);
+                    //ViewBag.BarcodeUrl = path.FileName;
+                    //_memCache.Set(cacheKey, barcodeArray, cacheExpOptions);
                 }
                 else
                 {

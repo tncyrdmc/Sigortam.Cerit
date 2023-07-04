@@ -27,12 +27,13 @@
 <body class="backGroundColor">
     <div class="sidebar close">
         <div class="logo-details">
-            <i class='bx bxl-c-plus-plus'></i>
+            <i class='bx bxl-c-plus-plus' asp-controller="Insurance" asp-action="Index" ></i>
+            @*<img class="bx" src="~/img/Sigortam. (2).png" width="70" height="60"/>*@
             <span class="logo_name">SIGORTAM.CERIT</span>
         </div>
         <ul class="nav-links">
             <li>
-                <a asp-controller="Home" asp-action="Insurance">
+                <a asp-controller="Insurance" asp-action="Index">
                     <i class='bx bx-grid-alt'></i>
                     <span class="link_name">Tüm Sigortalar</span>
                 </a>
@@ -42,7 +43,7 @@
             </li>
             <li>
                 <div class="iocn-link">
-                    <a href="#">
+                    <a asp-controller="InsuranceCompany" asp-action="Index">
                         <i class='bx bx-collection'></i>
                         <span class="link_name">Category</span>
                     </a>
@@ -50,9 +51,9 @@
                 </div>
                 <ul class="sub-menu">
                     <li><a class="link_name" asp-controller="InsuranceCompany" asp-action="Index">Sigorta Şirketleri</a></li>
-                    <li><a href="#">HTML & CSS</a></li>
+@*                    <li><a href="#">HTML & CSS</a></li>
                     <li><a href="#">JavaScript</a></li>
-                    <li><a href="#">PHP & MySQL</a></li>
+                    <li><a href="#">PHP & MySQL</a></li>*@
                 </ul>
             </li>
             <li>
@@ -156,7 +157,7 @@
                         </svg>
                     </button>
                 </div>
-                <div style="margin:6px"></div>
+                <div style="margin:3px"></div>
                 @if (SignInManager.IsSignedIn(User))
                 {
                     <div class="">
@@ -164,12 +165,13 @@
                             <img src="~/img/logout.png" />
                         </a>
                     </div>
-                    <div style="margin:6px"></div>
+                    <div style="margin:3px"></div>
                     <div class="">
                         <p class="app-content-headerText" style="font-size:15px">
                             @UserManager.GetUserName(User)
                         </p>
                     </div>
+                    <div style="margin:15px"></div>
                 }
             </div>
         </div>

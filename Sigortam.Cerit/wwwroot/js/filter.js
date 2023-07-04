@@ -26,6 +26,16 @@
         }
     });
 }
+function getExpiredInsurances() {
+    $.ajax({
+        type: "POST",
+        url: "/Insurance/GetExpiredInsurances/",
+        success: function (response) {
+            alert("Süresi yaklaşan kayıtlar başarılı bir şekilde getirildi.")
+            window.location.href = response.redirectToUrl;
+        }
+    });
+}
 function filtertSearch() {
     let searchText = document.getElementById('search-bar').value;
     debugger;
@@ -40,7 +50,6 @@ function filtertSearch() {
         });
 }
 function removeCash() {
-    debugger;
     $.ajax({
         type: "POST",
         url: "/Insurance/RemoveCash/",

@@ -39,16 +39,18 @@ namespace Sigortam.Cerit.Controllers
             }
             else
             {
-                insurances = GetInsurances();
+                FilterInsurance(new FilterDto());
+                return RedirectToAction("Index", "Insurance");
             }
             if (_memCache.TryGetValue(_filterKey, out FilterDto filter))
             {
-                ViewBag.Filter = filter;
+                //ViewBag.Filter = filter;
             }
             ViewBag.InsuranceActiveCompany = _servis.GetInsuranceCompanys().Where(x => x.IsActive).ToList();
             ViewBag.InsuranceCompany = _servis.GetInsuranceCompanys().ToList();
             return View(insurances);
         }
+        
         public IActionResult FilterInsurance(FilterDto filterDto)
         {
             filterDto = (filterDto == null ? new FilterDto { IsResetCasheFilter = true } : filterDto);
@@ -71,9 +73,17 @@ namespace Sigortam.Cerit.Controllers
             }
             filterDto.Year = filterDto.Year == default ? DateTime.Now.Year : filterDto.Year;
             filterDto.Month = filterDto.Month == default ? DateTime.Now.Month : filterDto.Month;
+            filterDto.FilterSort = filterDto.FilterSort == null ? "userFullName" : filterDto.FilterSort.ToString();
+            
+            if(filterDto.Month == 13)
+            {
+                insurances = insurances.Where(x => x.InsuranceStartDate.Year == filterDto.Year).ToList();
+            }
+            else
+            {
+                insurances = insurances.Where(x => x.InsuranceStartDate.Year == filterDto.Year && x.InsuranceStartDate.Month == filterDto.Month).ToList();
 
-            insurances = insurances.Where(x => x.InsuranceStartDate.Year == filterDto.Year && x.InsuranceStartDate.Month == filterDto.Month).ToList();
-
+            }
             if (filterDto.StatusType != StatusType.All)
             {
                 bool isActive = filterDto.StatusType == StatusType.Enable ? true : false;
@@ -250,10 +260,25 @@ namespace Sigortam.Cerit.Controllers
         {
             return _servis.GetInsurances().OrderBy(x => x.IsActive).ToList();
         }
-        public JsonResult AddOrUpdateInsurance(InsuranceDto userIdentityCheckDto)
+        public JsonResult AddOrUpdateInsurance(InsuranceDto insuranceDto)
         {
-            _servis.AddOrUpdateInsurance(userIdentityCheckDto);
+            _servis.AddOrUpdateInsurance(insuranceDto);
             return Json(new { Message = "Başarılı bir şekilde kayıt oluşturuldu", Code = ResultType.Succeeded });
+        }
+        public JsonResult GetExpiredInsurances()
+        {
+            var cacheExpOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpiration = DateTime.Now.AddMinutes(30),
+                Priority = CacheItemPriority.Normal
+            };
+
+            _memCache.Remove(_filterKey);
+            //_memCache.Remove(_insuranceKey);
+            var insurances = GetInsurances().Where(x=> (x.InsuranceEndDate - DateTime.Now).TotalDays < 60 && (x.InsuranceEndDate - DateTime.Now).TotalDays >= 0 ).ToList();
+            _memCache.Set(_insuranceKey, insurances, cacheExpOptions);
+            //FilterInsurance(new FilterDto { IsResetCasheFilter = true });
+            return Json(new { redirectToUrl = Url.Action("Index", "Insurance") });
         }
         public JsonResult RemoveCash()
         {
