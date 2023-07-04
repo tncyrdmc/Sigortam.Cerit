@@ -68,6 +68,7 @@ namespace Sigortam.Cerit.Core.Services.Insurance
                 InsuranceEndDate = insuranceDto.InsuranceEndDate,
                 InsuranceStartDate = insuranceDto.InsuranceStartDate,
                 Price = insuranceDto.Price,
+                PermitNumber = insuranceDto.PermitNumber,
                 User = user,
                 InsuranceCompany = insuranceCompany,
                 Vehicle = vehicle,
@@ -128,6 +129,7 @@ namespace Sigortam.Cerit.Core.Services.Insurance
                 InsuranceId = x.InsuranceId,
                 InsuranceStartDate = x.InsuranceStartDate,
                 Price = x.Price,
+                PermitNumber = x.PermitNumber,
                 User = x.User != null ? new UserDto
                 {
                     Name = x.User.Name,

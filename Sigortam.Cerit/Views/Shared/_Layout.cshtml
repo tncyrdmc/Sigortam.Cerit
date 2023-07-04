@@ -26,8 +26,9 @@
 </head>
 <body class="backGroundColor">
     <div class="sidebar close">
+
         <div class="logo-details">
-            <i class='bx bxl-c-plus-plus' asp-controller="Insurance" asp-action="Index" ></i>
+            <i class='bx bxl-c-plus-plus' asp-controller="Insurance" asp-action="Index"></i>
             @*<img class="bx" src="~/img/Sigortam. (2).png" width="70" height="60"/>*@
             <span class="logo_name">SIGORTAM.CERIT</span>
         </div>
@@ -51,9 +52,9 @@
                 </div>
                 <ul class="sub-menu">
                     <li><a class="link_name" asp-controller="InsuranceCompany" asp-action="Index">Sigorta Şirketleri</a></li>
-@*                    <li><a href="#">HTML & CSS</a></li>
-                    <li><a href="#">JavaScript</a></li>
-                    <li><a href="#">PHP & MySQL</a></li>*@
+                    @*                    <li><a href="#">HTML & CSS</a></li>
+                        <li><a href="#">JavaScript</a></li>
+                        <li><a href="#">PHP & MySQL</a></li>*@
                 </ul>
             </li>
             <li>
@@ -147,8 +148,8 @@
     </div>
     <div class="body-container" style="height:105% ; width:96% ;margin-top:3%; margin-left:5%">
         @*<main role="main" class="pb-3">*@
-        <div class="app-content-actions">
-            <div class="app-content-actions-wrapper">
+        <div class="app-content-actions row" style="margin-left:70%">
+            <div class="app-content-actions-wrapper col-md-12" style="margin-left:60%">
                 <div>
                     <button class="mode-switch" title="Mod değiştir" style="color:red">
                         <svg class="moon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="24" height="24" viewBox="0 0 24 24">
@@ -173,6 +174,26 @@
                     </div>
                     <div style="margin:15px"></div>
                 }
+            </div>
+            <div class="app-content-actions-wrapper col-md-12">
+                <div hidden="hidden" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Başarılı:</strong> Süresi yaklaşan kayıtlar başarılı bir şekilde getirildi.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div hidden="hidden" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Hata:</strong> Süresi yaklaşan kayıtlar başarılı bir şekilde getirildi.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div hidden="hidden" class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>Uyarı:</strong> Süresi yaklaşan kayıtlar başarılı bir şekilde getirildi.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
             </div>
         </div>
 

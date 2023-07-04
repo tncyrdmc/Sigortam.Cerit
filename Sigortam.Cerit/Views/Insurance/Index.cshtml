@@ -8,7 +8,7 @@
     var count = 0;
     var insurancesActiveCompanys = (List<InsuranceCompanyDto>)ViewBag.InsuranceActiveCompany;
     var insurancesCompanys = (List<InsuranceCompanyDto>)ViewBag.InsuranceCompany;
-    var filter = (FilterDto)ViewBag.Filter;
+    var filter = (FilterDto)ViewBag.FilterDto;
     var searchText = filter?.SearchText ?? string.Empty;
     var NowYear = DateTime.Now.Year;
 }
@@ -55,6 +55,7 @@
                                     <span class="ion-ios-person"></span>
                                 </div>
                                 <h3 class="text-center mb-4 signIn">Kayıt Edin</h3>
+                                <h3 hidden="hidden" id="userId"></h3>
                                 <div class="form-group row">
                                     <div class="col">
                                         <input type="text" id="name" class="form-control rounded-left needs-validation-text" placeholder="İsim" required />
@@ -195,7 +196,7 @@
                 </div>
             </div>
             <div class="app-content-actions">
-                <input class="search-bar" id="search-bar" placeholder="Search..." type="text" value="@searchText" onchange="filtertSearch()">
+                <input class="search-bar" id="search-bar" placeholder="Search..." type="text" value="@searchText" onchange="addFilter()">
                 <div class="app-content-actions-wrapper">
                     <button class="action-button" onclick="DownloadExcelInsurance()"><img src="~/img/excel (1).png" style="width:35px"></button>
                     <div style=margin:12px></div>

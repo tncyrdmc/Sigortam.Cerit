@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Sigortam.Cerit.Data.Entity
 {
-    public class Insurance:BaseEntity
+    public class Insurance : BaseEntity
     {
         [Key]
         public int InsuranceId { get; set; }
@@ -17,5 +17,6 @@ namespace Sigortam.Cerit.Data.Entity
         public User? User { get; set; }
         public Vehicle? Vehicle { get; set; }
         public InsuranceCompany? InsuranceCompany { get; set; }
+        public string PermitNumber { get; set; }
     }
 }

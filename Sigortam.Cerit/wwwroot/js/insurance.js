@@ -17,12 +17,12 @@
     var VehicleDto = { PlateNumber: document.getElementById("plateNumber").value };
     if (validate === 0) {
         var user = {
-            Name: document.getElementById("name").value, LastName: document.getElementById("lastName").value, IdentificationNumber: document.getElementById("identificationNumber").value,
-            BirthYear: document.getElementById("birthDate").value
+            UserId: document.getElementById("userId").value, Name: document.getElementById("name").value, LastName: document.getElementById("lastName").value,
+            IdentificationNumber: document.getElementById("identificationNumber").value, BirthYear: document.getElementById("birthDate").value
         }
 
         var userIdentityCheckDto = {
-            InsuranceStartDate: document.getElementById("insuranceStartDate").value, InsuranceEndDate: document.getElementById("insuranceEndDate").value, PlateNumber: document.getElementById("plateNumber").value,
+            InsuranceStartDate: document.getElementById("insuranceStartDate").value, InsuranceEndDate: document.getElementById("insuranceEndDate").value, PlateNumber: document.getElementById("plateNumber").value, PermitNumber: document.getElementById("permitNumber").value,
             User: user,
             InsuranceCompany: InsuranceCompanyDto,
             Vehicle: VehicleDto,
@@ -35,9 +35,9 @@
             data: userIdentityCheckDto,
             success:  function (result) {
                 if (result.code == 101) {
-                    alert(result.message);
                     addFilter();
-                    //location.href = "/Insurance/Index";
+                    alert(result.message);
+                    //window.location.href = result.redirectToUrl;
                 }
                 else {
                     alert(result.message)
@@ -56,13 +56,16 @@ function GetInsuranceInformation(insuranceId) {
         data: { insuranceId: insuranceId },
         dataType: "json",
         success: function (insurance) {
+            debugger;
+            document.getElementById("userId").value = insurance.insurance.user.userId;
             document.getElementById("insuranceId").value = insuranceId;
             document.getElementById("name").value = insurance.insurance.user.name;
             document.getElementById("lastName").value = insurance.insurance.user.lastName;
             document.getElementById("identificationNumber").value = insurance.insurance.user.identificationNumber;
             document.getElementById("birthDate").value = insurance.insurance.user.birthYear;
-            //document.getElementById("plateNumber").value = insurance.insurance.plateNumber;
+            document.getElementById("plateNumber").value = insurance.insurance.vehicle.plateNumber;
             document.getElementById("price").value = insurance.insurance.price;
+            document.getElementById("permitNumber").value = insurance.insurance.permitNumber;
             document.getElementById("insuranceStartDate").value = insurance.insurance.insuranceStartDate.replace('T00:00:00', '');
             document.getElementById("insuranceEndDate").value = insurance.insurance.insuranceEndDate.replace('T00:00:00', '');
 

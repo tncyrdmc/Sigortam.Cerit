@@ -44,7 +44,9 @@ namespace Sigortam.Cerit.Controllers
             }
             if (_memCache.TryGetValue(_filterKey, out FilterDto filter))
             {
-                //ViewBag.Filter = filter;
+                var filterDto = new FilterDto {FilterSort = filter.FilterSort , InsuranceCompanyId = filter.InsuranceCompanyId , IsResetCasheFilter = filter.IsResetCasheFilter ,
+                    Month = filter.Month , SearchText = filter.SearchText , StatusType = filter.StatusType , Year = filter.Year};
+                ViewBag.FilterDto = filterDto;
             }
             ViewBag.InsuranceActiveCompany = _servis.GetInsuranceCompanys().Where(x => x.IsActive).ToList();
             ViewBag.InsuranceCompany = _servis.GetInsuranceCompanys().ToList();
@@ -99,7 +101,7 @@ namespace Sigortam.Cerit.Controllers
             }
             insurances = insurances.OrderBy(x => x.IsActive).ToList();
             _memCache.Set(_filterKey, filterDto, cacheExpOptions);
-            _memCache.Set(_insuranceKey, insurances, cacheExpOptions);
+            _memCache.Set(_insuranceKey, insurances.ToList(), cacheExpOptions);
             return Json(new { redirectToUrl = Url.Action("Index", "Insurance") });
         }
         public IActionResult ExcelExportInsurance()
@@ -263,7 +265,8 @@ namespace Sigortam.Cerit.Controllers
         public JsonResult AddOrUpdateInsurance(InsuranceDto insuranceDto)
         {
             _servis.AddOrUpdateInsurance(insuranceDto);
-            return Json(new { Message = "Başarılı bir şekilde kayıt oluşturuldu", Code = ResultType.Succeeded });
+            _memCache.Remove(_insuranceKey);
+            return Json(new { redirectToUrl = Url.Action("Index", "Insurance") , Message = "Başarılı bir şekilde kayıt oluşturuldu", Code = ResultType.Succeeded });
         }
         public JsonResult GetExpiredInsurances()
         {
