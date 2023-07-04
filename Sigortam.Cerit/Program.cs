@@ -12,24 +12,32 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 
-builder.Services.AddAuthentication("YourSchemeName").AddCookie("YourSchemeName",
-                config =>
-                {
-                    config.Cookie.Name = "YourCookieName";
-                    config.LoginPath = "/Login/Index";
-                });
+//builder.Services.AddAuthentication("YourSchemeName").AddCookie("YourSchemeName",
+//                config =>
+//                {
+//                    config.Cookie.Name = "YourCookieName";
+//                    config.LoginPath = "/Login/Index";
+//                });
 
-//builder.Services.AddAuthentication(
-//    CookieAuthenticationDefaults.AuthenticationScheme)
-//    .AddCookie(option =>
+
+//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//    .AddCookie(options =>
 //    {
-//        option.LoginPath = "/Login/Index";
-//        option.LogoutPath = "/Login/Index";
-//        option.Cookie.Path = "/";
-//        option.Cookie.HttpOnly = true;
-//        option.ExpireTimeSpan = TimeSpan.FromMinutes(1);
-//        option.SlidingExpiration = true;
+//        options.LoginPath = "/Login/Index";
 //    });
+
+builder.Services.AddAuthentication(
+    CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(option =>
+    {
+        option.LoginPath = "/login/index";
+        option.LogoutPath = "/login/index";
+        option.Cookie.Path = "/";
+        option.Cookie.HttpOnly = true;
+        option.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+        option.SlidingExpiration = true;
+    });
+
 builder.Services.AddIdentity<AppUser, AppRole>(options =>
 {
     options.User.RequireUniqueEmail = false;
@@ -55,6 +63,17 @@ else
 {
     app.UseDeveloperExceptionPage();
 }
+
+app.Use(async (context, next) =>
+{
+    await next();
+    if (context.Response.StatusCode == 404)
+    {
+        context.Request.Path = "/Home/Error";
+        await next();
+    }
+});
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

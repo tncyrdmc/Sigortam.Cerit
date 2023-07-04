@@ -25,7 +25,7 @@
             InsuranceStartDate: document.getElementById("insuranceStartDate").value, InsuranceEndDate: document.getElementById("insuranceEndDate").value, PlateNumber: document.getElementById("plateNumber").value,
             User: user,
             InsuranceCompany: InsuranceCompanyDto,
-            Vehic: VehicleDto,
+            Vehicle: VehicleDto,
             InsuranceId: document.getElementById("insuranceId").value, Price: document.getElementById("price").value
         };
 

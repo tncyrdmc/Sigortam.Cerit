@@ -34,13 +34,13 @@ namespace Sigortam.Cerit.Core.Services.Insurance
             {
                 user = new User
                 {
-                    BirthYear = insuranceDto.User.BirthYear,
-                    IdentificationNumber = insuranceDto.User.IdentificationNumber,
+                    BirthYear = insuranceDto.User.BirthYear != null ? insuranceDto.User.BirthYear : default,
+                    IdentificationNumber = insuranceDto.User.IdentificationNumber != null ? insuranceDto.User.IdentificationNumber : default,
                     IsActive = insuranceDto.User.IsActive,
                     IsDelete = insuranceDto.User.IsDelete,
-                    LastName = insuranceDto.User.LastName,
-                    Name = insuranceDto.User.Name,
-                    PhoneNumber = insuranceDto.User.PhoneNumber,
+                    LastName = insuranceDto.User.LastName != null ? insuranceDto.User.LastName : string.Empty,
+                    Name = insuranceDto.User.Name != null ? insuranceDto.User.Name : string.Empty,
+                    PhoneNumber = insuranceDto.User.PhoneNumber != null ? insuranceDto.User.PhoneNumber : default,
                     
                 };
                 _context.User.Add(user);
@@ -48,16 +48,16 @@ namespace Sigortam.Cerit.Core.Services.Insurance
 
             if (insuranceDto.Vehicle.VehicleId != default)
             {
-                vehicle = _context.Vehicle.FirstOrDefault(x => x.VehicleId == insuranceDto.Vehicle.VehicleId);
+                vehicle = _context.Vehicle.FirstOrDefault(x => x.PlateNumber == insuranceDto.Vehicle.PlateNumber);
             }
             else
             {
                 vehicle = new Vehicle
                 {
-                    Brand = insuranceDto.Vehicle.Brand,
-                    Model = insuranceDto.Vehicle.Model,
-                    PlateNumber = insuranceDto.Vehicle.PlateNumber,
-                    VehicleYear = insuranceDto.Vehicle.VehicleYear,
+                    Brand = insuranceDto.Vehicle.Brand != null ? insuranceDto.Vehicle.Brand  : string.Empty,
+                    Model = insuranceDto.Vehicle.Model != null ? insuranceDto.Vehicle.Model : string.Empty,
+                    PlateNumber = insuranceDto.Vehicle.PlateNumber != null ? insuranceDto.Vehicle.PlateNumber : string.Empty,
+                    VehicleYear = insuranceDto.Vehicle.VehicleYear != null ? insuranceDto.Vehicle.VehicleYear : default,
                 };
                 _context.Vehicle.Add(vehicle);
             }
@@ -70,7 +70,7 @@ namespace Sigortam.Cerit.Core.Services.Insurance
                 Price = insuranceDto.Price,
                 User = user,
                 InsuranceCompany = insuranceCompany,
-                //Vehicle = vehicle,
+                Vehicle = vehicle,
             };
 
             if (insuranceDto.InsuranceId > 0)

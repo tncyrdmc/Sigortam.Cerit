@@ -17,12 +17,13 @@ namespace Sigortam.Cerit.Controllers
             _signInManager = signInManager;
             _userManager = userManager;
         }
-
+        [Route("Account/Login")]
         [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
+        [Route("Account/Login")]
         [HttpPost]
         public async Task<IActionResult> Index(UserLoginDto loginDto)
         {
